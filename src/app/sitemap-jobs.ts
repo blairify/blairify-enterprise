@@ -4,7 +4,7 @@ import type { MetadataRoute } from "next";
 const prisma = new PrismaClient();
 
 export default async function jobsSitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = "https://blairify.com"; // Update with your actual domain
+  const baseUrl = "https://enterprise.blairify.com"; // Update with your actual domain
 
   try {
     // Get recent job listings for sitemap

@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Blairify - AI-Powered Career Acceleration Platform ",
+  title: "Blairify Enterprise - Talent Acquisition Platform ",
   description:
-    "Blairify is the new standard in job search. Curated jobs meet AI-powered interview prep. Browse opportunities, and land your dream role faster. Start today!",
+    "Blairify is the new standard in talent acquisition. Curated jobs meet AI-powered interview prep. Browse opportunities, and land your dream role faster. Start today!",
   keywords: [
     "job search platform",
     "tech jobs",
@@ -13,7 +13,6 @@ export const metadata: Metadata = {
     "career opportunities",
     "job application tracking",
     "interview practice",
-    "tech career",
     "remote jobs",
     "job search",
     "job search platform",
@@ -25,21 +24,21 @@ export const metadata: Metadata = {
   authors: [{ name: "Blairify" }],
   creator: "Blairify",
   publisher: "Blairify",
-  metadataBase: new URL("https://blairify.com"),
+  metadataBase: new URL("https://enterprise.blairify.com"),
   alternates: {
     canonical: "/",
   },
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://blairify.com/",
+    url: "https://enterprise.blairify.com/",
     siteName: "Blairify",
     title: "Blairify - AI-Powered Career Acceleration Platform",
     description:
       "Blairify is the new standard in job search. Curated jobs meet AI-powered interview prep. Browse opportunities, practice 1000+ questions, and land your dream role faster.",
     images: [
       {
-        url: "https://blairify.com/og-image.png",
+        url: "https://enterprise.blairify.com/og-image.png",
         width: 1200,
         height: 630,
         alt: "Blairify - AI powered Career Acceleration Platform",
@@ -52,7 +51,7 @@ export const metadata: Metadata = {
     title: "Blairify - AI-powered Career Acceleration Platform",
     description:
       "Blairify is the new standard in job search. Curated jobs meet AI-powered interview prep. Land your dream role tomorrow.",
-    images: ["https://blairify.com/og-image.png"],
+    images: ["https://enterprise.blairify.com/og-image.png"],
     creator: "@blairify",
   },
   robots: {
@@ -69,7 +68,7 @@ export const metadata: Metadata = {
   category: "Business",
   other: {
     "fb:app_id": "your-facebook-app-id", // TODO replace
-    "og:image:secure_url": "https://blairify.com/og-image.png",
+    "og:image:secure_url": "https://enterprise.blairify.com/og-image.png",
   },
 };
 
@@ -78,54 +77,54 @@ const jsonLd = {
   "@graph": [
     {
       "@type": "WebSite",
-      "@id": "https://blairify.com/#website",
-      url: "https://blairify.com",
+      "@id": "https://enterprise.blairify.com/#website",
+      url: "https://enterprise.blairify.com",
       name: "Blairify",
       description:
         "Job search platform with interview preparation tools for tech professionals",
       publisher: {
-        "@id": "https://blairify.com/#organization",
+        "@id": "https://enterprise.blairify.com/#organization",
       },
       potentialAction: {
         "@type": "SearchAction",
-        target: "https://blairify.com/search?q={search_term_string}",
+        target: "https://enterprise.blairify.com/search?q={search_term_string}",
         "query-input": "required name=search_term_string",
       },
     },
     {
       "@type": "Organization",
-      "@id": "https://blairify.com/#organization",
+      "@id": "https://enterprise.blairify.com/#organization",
       name: "Blairify",
-      url: "https://blairify.com",
+      url: "https://enterprise.blairify.com",
       logo: {
         "@type": "ImageObject",
-        url: "https://blairify.com/300.png",
+        url: "https://enterprise.blairify.com/300.png",
       },
       sameAs: ["https://www.linkedin.com/company/blairify"],
     },
     {
       "@type": "WebPage",
-      "@id": "https://blairify.com/#webpage",
-      url: "https://blairify.com",
+      "@id": "https://enterprise.blairify.com/#webpage",
+      url: "https://enterprise.blairify.com",
       name: "Blairify - Job Search & Interview Prep",
       description:
         "Find tech jobs and prepare for interviews with curated listings and practice questions",
       isPartOf: {
-        "@id": "https://blairify.com/#website",
+        "@id": "https://enterprise.blairify.com/#website",
       },
       about: {
-        "@id": "https://blairify.com/#organization",
+        "@id": "https://enterprise.blairify.com/#organization",
       },
       primaryImageOfPage: {
         "@type": "ImageObject",
-        url: "https://blairify.com/og-image.png",
+        url: "https://enterprise.blairify.com/og-image.png",
       },
     },
     {
       "@type": "Service",
       serviceType: "Job Search and Interview Preparation Platform",
       provider: {
-        "@id": "https://blairify.com/#organization",
+        "@id": "https://enterprise.blairify.com/#organization",
       },
       areaServed: "Worldwide",
       hasOfferCatalog: {

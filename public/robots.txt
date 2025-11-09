@@ -1,5 +1,5 @@
 # Robots.txt for Blairify - Job Search & Interview Preparation Platform
-# https://blairify.com/robots.txt
+# https://enterprise.blairify.com/robots.txt
 
 User-agent: *
 
@@ -62,4 +62,4 @@ User-agent: DotBot
 Disallow: /
 
 # Sitemap location
-Sitemap: https://blairify.com/sitemap.xml
+Sitemap: https://enterprise.blairify.com/sitemap.xml

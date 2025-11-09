@@ -8,7 +8,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_BASE_URL || "https://blairify.com",
+    process.env.NEXT_PUBLIC_BASE_URL || "https://enterprise.blairify.com",
   ),
 
   title: {
@@ -79,9 +79,9 @@ export const metadata: Metadata = {
   },
 
   alternates: {
-    canonical: "https://blairify.com",
+    canonical: "https://enterprise.blairify.com",
     languages: {
-      "en-US": "https://blairify.com",
+      "en-US": "https://enterprise.blairify.com",
     },
   },
 
