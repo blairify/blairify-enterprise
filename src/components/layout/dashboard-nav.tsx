@@ -9,7 +9,8 @@ import {
   Users,
 } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { toast } from "sonner";
 import Logo from "@/components/atoms/logo-blairify";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -23,8 +24,27 @@ const navigation = [
   { name: "Settings", href: "/dashboard/settings", icon: Settings },
 ];
 
-export function DashboardNav() {
+export default function DashboardNav() {
   const pathname = usePathname();
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    try {
+      const response = await fetch("/api/auth/logout", {
+        method: "POST",
+      });
+
+      if (response.ok) {
+        toast.success("Logged out successfully");
+        router.push("/login");
+      } else {
+        toast.error("Failed to log out");
+      }
+    } catch (error) {
+      console.error("Logout error:", error);
+      toast.error("Failed to log out");
+    }
+  };
 
   return (
     <div className="flex h-screen w-64 flex-col border-r bg-card">
@@ -67,7 +87,12 @@ export function DashboardNav() {
             <p className="text-xs text-muted-foreground">admin@acme.com</p>
           </div>
         </div>
-        <Button variant="ghost" size="sm" className="w-full justify-start">
+        <Button
+          variant="ghost"
+          size="sm"
+          className="w-full justify-start"
+          onClick={handleLogout}
+        >
           <LogOut className="mr-2 h-4 w-4" />
           Sign out
         </Button>

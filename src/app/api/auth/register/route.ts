@@ -79,17 +79,18 @@ export async function POST(request: NextRequest) {
       let orgId: string;
 
       if (enterpriseName) {
-        // Create new enterprise
-        const enterpriseSlug = generateSlug(enterpriseName);
-
-        // Check if enterprise slug exists
+        // Create new enterprise with unique slug
+        let enterpriseSlug = generateSlug(enterpriseName);
+        
+        // Check if enterprise slug exists and make it unique
         const existingEnterprise = await tx.enterprise.findFirst({
           where: { slug: enterpriseSlug },
           select: { id: true },
         });
 
         if (existingEnterprise) {
-          throw new Error("Enterprise with this name already exists");
+          // Add random suffix to make slug unique
+          enterpriseSlug = `${enterpriseSlug}-${Math.random().toString(36).substring(2, 8)}`;
         }
 
         const newEnterprise = await tx.enterprise.create({
@@ -113,9 +114,11 @@ export async function POST(request: NextRequest) {
         });
         orgId = newOrg.id;
       } else {
-        // For demo: Create a default enterprise and org
+        // For demo: Create a default enterprise and org with unique slug
         const defaultEnterpriseName = `${name}'s Enterprise`;
-        const enterpriseSlug = generateSlug(defaultEnterpriseName);
+        const baseSlug = generateSlug(defaultEnterpriseName);
+        // Always make it unique with random suffix for default enterprises
+        const enterpriseSlug = `${baseSlug}-${Math.random().toString(36).substring(2, 8)}`;
 
         const newEnterprise = await tx.enterprise.create({
           data: {
