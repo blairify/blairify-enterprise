@@ -24,21 +24,19 @@ export const metadata: Metadata = {
   authors: [{ name: "Blairify" }],
   creator: "Blairify",
   publisher: "Blairify",
-  metadataBase: new URL("https://enterprise.blairify.com"),
   alternates: {
     canonical: "/",
   },
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://enterprise.blairify.com/",
     siteName: "Blairify",
     title: "Blairify - AI-Powered Career Acceleration Platform",
     description:
       "Blairify is the new standard in job search. Curated jobs meet AI-powered interview prep. Browse opportunities, practice 1000+ questions, and land your dream role faster.",
     images: [
       {
-        url: "https://enterprise.blairify.com/og-image.png",
+        url: "/opengraph-image.png",
         width: 1200,
         height: 630,
         alt: "Blairify - AI powered Career Acceleration Platform",
@@ -51,7 +49,7 @@ export const metadata: Metadata = {
     title: "Blairify - AI-powered Career Acceleration Platform",
     description:
       "Blairify is the new standard in job search. Curated jobs meet AI-powered interview prep. Land your dream role tomorrow.",
-    images: ["https://enterprise.blairify.com/og-image.png"],
+    images: ["/twitter-image.png"],
     creator: "@blairify",
   },
   robots: {
