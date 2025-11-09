@@ -1,0 +1,172 @@
+// Prisma schema for multi-tenant SaaS platform with RLS
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// Top-level tenant: Enterprise
+model Enterprise {
+  id         String   @id @default(uuid()) @db.Uuid
+  name       String
+  slug       String   @unique
+  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt  DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  organisations     Organisation[]
+  users             User[]
+  questionTemplates QuestionTemplate[]
+  jobListings       JobListing[]
+
+  @@map("enterprise")
+}
+
+// Sub-account under Enterprise
+model Organisation {
+  id           String   @id @default(uuid()) @db.Uuid
+  enterpriseId String   @map("enterprise_id") @db.Uuid
+  name         String
+  slug         String
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt    DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  enterprise Enterprise @relation(fields: [enterpriseId], references: [id], onDelete: Cascade)
+  users      User[]
+  jobListings JobListing[]
+
+  @@unique([enterpriseId, slug])
+  @@map("organisation")
+}
+
+enum UserRole {
+  ENTERPRISE_ADMIN
+  ORG_ADMIN
+  RECRUITER
+  CANDIDATE
+
+  @@map("user_role")
+}
+
+// Users belong to enterprise, optionally to organisation
+model User {
+  id           String   @id @default(uuid()) @db.Uuid
+  enterpriseId String   @map("enterprise_id") @db.Uuid
+  orgId        String?  @map("org_id") @db.Uuid
+  email        String
+  name         String
+  passwordHash String?  @map("password_hash")
+  role         UserRole
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt    DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  enterprise        Enterprise         @relation(fields: [enterpriseId], references: [id], onDelete: Cascade)
+  organisation      Organisation?      @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  jobListings       JobListing[]
+  interviewSessions InterviewSession[]
+
+  @@unique([enterpriseId, email])
+  @@map("user")
+}
+
+// Job postings
+model JobListing {
+  id           String   @id @default(uuid()) @db.Uuid
+  enterpriseId String   @map("enterprise_id") @db.Uuid
+  orgId        String   @map("org_id") @db.Uuid
+  createdById  String   @map("created_by_id") @db.Uuid
+  title        String
+  description  String
+  status       String   @default("draft") // draft, active, closed
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt    DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  enterprise        Enterprise         @relation(fields: [enterpriseId], references: [id], onDelete: Cascade)
+  organisation      Organisation       @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  createdBy         User               @relation(fields: [createdById], references: [id])
+  jobTemplates      JobTemplate[]
+  interviewSessions InterviewSession[]
+  inviteTokens      InviteToken[]
+
+  @@map("job_listing")
+}
+
+// Reusable question templates (enterprise-wide or custom per job)
+model QuestionTemplate {
+  id           String   @id @default(uuid()) @db.Uuid
+  enterpriseId String   @map("enterprise_id") @db.Uuid
+  orgId        String?  @map("org_id") @db.Uuid // null = enterprise-wide
+  name         String
+  description  String?
+  questions    Json     // Array of question objects
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt    DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  enterprise   Enterprise    @relation(fields: [enterpriseId], references: [id], onDelete: Cascade)
+  jobTemplates JobTemplate[]
+
+  @@map("question_template")
+}
+
+// Links job to question templates and/or custom questions
+model JobTemplate {
+  id                 String   @id @default(uuid()) @db.Uuid
+  enterpriseId       String   @map("enterprise_id") @db.Uuid
+  orgId              String   @map("org_id") @db.Uuid
+  jobListingId       String   @map("job_listing_id") @db.Uuid
+  questionTemplateId String?  @map("question_template_id") @db.Uuid
+  customQuestions    Json?    @map("custom_questions") // Additional custom questions
+  createdAt          DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt          DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  jobListing       JobListing        @relation(fields: [jobListingId], references: [id], onDelete: Cascade)
+  questionTemplate QuestionTemplate? @relation(fields: [questionTemplateId], references: [id], onDelete: SetNull)
+
+  @@map("job_template")
+}
+
+// Interview sessions with snapshot of questions
+model InterviewSession {
+  id                String   @id @default(uuid()) @db.Uuid
+  enterpriseId      String   @map("enterprise_id") @db.Uuid
+  orgId             String   @map("org_id") @db.Uuid
+  jobListingId      String   @map("job_listing_id") @db.Uuid
+  candidateId       String   @map("candidate_id") @db.Uuid
+  inviteTokenId     String?  @map("invite_token_id") @db.Uuid
+  questionsSnapshot Json     @map("questions_snapshot") // Frozen copy of questions at time of interview
+  responses         Json?    // Candidate responses
+  status            String   @default("pending") // pending, in_progress, completed, expired
+  startedAt         DateTime? @map("started_at") @db.Timestamptz(6)
+  completedAt       DateTime? @map("completed_at") @db.Timestamptz(6)
+  createdAt         DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt         DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  jobListing  JobListing   @relation(fields: [jobListingId], references: [id], onDelete: Cascade)
+  candidate   User         @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  inviteToken InviteToken? @relation(fields: [inviteTokenId], references: [id], onDelete: SetNull)
+
+  @@map("interview_session")
+}
+
+// Single-use interview access codes
+model InviteToken {
+  id           String   @id @default(uuid()) @db.Uuid
+  enterpriseId String   @map("enterprise_id") @db.Uuid
+  orgId        String   @map("org_id") @db.Uuid
+  jobListingId String   @map("job_listing_id") @db.Uuid
+  code         String   @unique
+  maxUses      Int      @default(1) @map("max_uses")
+  uses         Int      @default(0)
+  expiresAt    DateTime @map("expires_at") @db.Timestamptz(6)
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt    DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  jobListing        JobListing         @relation(fields: [jobListingId], references: [id], onDelete: Cascade)
+  interviewSessions InterviewSession[]
+
+  @@map("invite_token")
+}
