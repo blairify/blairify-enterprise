@@ -122,19 +122,19 @@ export function getTenantContextFromHeaders(headers: Headers): TenantContext {
 /**
  * Set tenant context for the current database session
  * This sets PostgreSQL session variables that RLS policies use for tenant isolation
- * 
+ *
  * @param db - Prisma client or transaction client
  * @param enterpriseId - Enterprise UUID (required)
  * @param organizationId - Organization UUID (optional)
  * @returns The same db client for chaining
- * 
+ *
  * @example
  * ```typescript
  * // In an API route
  * await setTenantContext(prisma, enterpriseId, orgId);
  * const jobs = await prisma.jobListing.findMany(); // Automatically filtered by RLS
  * ```
- * 
+ *
  * @example
  * ```typescript
  * // In a transaction
@@ -146,26 +146,30 @@ export function getTenantContextFromHeaders(headers: Headers): TenantContext {
  * });
  * ```
  */
-export async function setTenantContext<T extends PrismaClient | Omit<PrismaClient, "$connect" | "$disconnect" | "$on" | "$transaction" | "$use" | "$extends">>(
-  db: T,
-  enterpriseId: string,
-  organizationId?: string,
-): Promise<T> {
+export async function setTenantContext<
+  T extends
+    | PrismaClient
+    | Omit<
+        PrismaClient,
+        | "$connect"
+        | "$disconnect"
+        | "$on"
+        | "$transaction"
+        | "$use"
+        | "$extends"
+      >,
+>(db: T, enterpriseId: string, organizationId?: string): Promise<T> {
   // Set enterprise_id (required)
-  await db.$executeRawUnsafe(
-    `SET LOCAL app.enterprise_id = '${enterpriseId}'`
-  );
+  await db.$executeRawUnsafe(`SET LOCAL app.enterprise_id = '${enterpriseId}'`);
 
   // Set organization_id if provided
   if (organizationId) {
     await db.$executeRawUnsafe(
-      `SET LOCAL app.organization_id = '${organizationId}'`
+      `SET LOCAL app.organization_id = '${organizationId}'`,
     );
   } else {
     // Clear organization_id for enterprise-level operations
-    await db.$executeRawUnsafe(
-      `SET LOCAL app.organization_id = ''`
-    );
+    await db.$executeRawUnsafe(`SET LOCAL app.organization_id = ''`);
   }
 
   // Return the db client for chaining

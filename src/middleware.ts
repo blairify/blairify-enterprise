@@ -87,16 +87,21 @@ export async function middleware(request: NextRequest) {
   // Create response with tenant context headers
   const response = NextResponse.next();
 
-  // Set tenant context headers for downstream API routes
+  // Set tenant context headers for downstream API routes and RLS
+  // These headers are used by getTenantContextFromHeaders() and setTenantContext()
   response.headers.set("x-enterprise-id", session.enterpriseId);
   response.headers.set("x-user-id", session.userId);
 
   if (session.organisationId) {
     response.headers.set("x-organisation-id", session.organisationId);
+    // Also set American spelling variant for compatibility
+    response.headers.set("x-organization-id", session.organisationId);
   }
 
   // Optional: Set user role for authorization checks
   response.headers.set("x-user-role", session.role);
+  response.headers.set("x-user-email", session.email);
+  response.headers.set("x-user-name", session.name);
 
   return response;
 }
