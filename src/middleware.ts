@@ -42,10 +42,13 @@ async function getSession(request: NextRequest): Promise<SessionData | null> {
  * Paths that don't require authentication
  */
 const publicPaths = [
+  "/",
+  "/auth",
   "/api/auth",
   "/login",
   "/signup",
   "/api/interview/consume-invite", // Public endpoint for candidates
+  "/interview", // Public interview pages
 ];
 
 /**
@@ -107,9 +110,10 @@ export const config = {
      * Match all request paths except:
      * - _next/static (static files)
      * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
+     * - favicon.ico, sitemap.xml, robots.txt
+     * - Static files (images, fonts, etc.)
      * - public folder
      */
-    "/((?!_next/static|_next/image|favicon.ico|public).*)",
+    "/((?!_next/static|_next/image|favicon.ico|sitemap|robots|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|woff|woff2|ttf|otf)).*)",
   ],
 };
