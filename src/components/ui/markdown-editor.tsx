@@ -9,6 +9,7 @@ import {
   ListOrdered,
   Quote,
 } from "lucide-react";
+import type { HTMLAttributes } from "react";
 import { useRef, useState } from "react";
 import { Button } from "./button";
 import { Textarea } from "./textarea";
@@ -26,7 +27,7 @@ export function MarkdownEditor({
   placeholder?: string;
   className?: string;
   rows?: number;
-} & React.HTMLAttributes<HTMLTextAreaElement>) {
+} & HTMLAttributes<HTMLTextAreaElement>) {
   const [isPreview, setIsPreview] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -45,13 +46,6 @@ export function MarkdownEditor({
     const beforeText = value.substring(0, start);
     const afterText = value.substring(end, value.length);
 
-    // Create a new event for the textarea change
-    const event = {
-      target: {
-        value: "",
-      },
-    } as React.ChangeEvent<HTMLTextAreaElement>;
-
     // If there's selected text, wrap it with the syntax
     let newText: string;
     let newCursorPos: number;
@@ -69,9 +63,8 @@ export function MarkdownEditor({
       newCursorPos = start + syntax.prefix.length + placeholder.length;
     }
 
-    // Update the value through the event
-    event.target.value = newText;
-    onChange(event);
+    // Update the value
+    onChange(newText);
 
     // Set cursor position after a small delay to ensure the DOM is updated
     setTimeout(() => {
@@ -100,8 +93,7 @@ export function MarkdownEditor({
 
   const handleButtonClick =
     (syntax: { prefix: string; suffix?: string; placeholder?: string }) =>
-    (e: React.MouseEvent) => {
-      e.preventDefault();
+    () => {
       insertMarkdown(syntax);
     };
 
@@ -195,8 +187,7 @@ export function MarkdownEditor({
             variant="ghost"
             size="sm"
             className="text-xs h-7 px-2 text-muted-foreground hover:text-foreground"
-            onClick={(e) => {
-              e.preventDefault();
+            onClick={() => {
               setIsPreview(!isPreview);
             }}
           >
@@ -216,8 +207,8 @@ export function MarkdownEditor({
         <Textarea
           ref={textareaRef}
           value={value}
-          onChange={(e) => {
-            onChange(e);
+          onChange={(event) => {
+            onChange(event.target.value);
           }}
           onSelect={() => {
             // Force update selection range

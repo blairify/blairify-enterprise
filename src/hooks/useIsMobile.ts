@@ -53,7 +53,7 @@ export const useIsMobile = (): UseIsMobileReturn => {
       const isMobileDevice =
         mediaQuery.matches || (isMobileUA && window.innerWidth <= 768);
 
-      setIsMobile((prev) => {
+      setIsMobile((prev: boolean) => {
         if (prev !== isMobileDevice) {
           setIsLoading(false);
           return isMobileDevice;

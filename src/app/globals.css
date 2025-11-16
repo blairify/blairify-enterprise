@@ -287,3 +287,35 @@
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
+
+.swagger-ui,
+.swagger-ui .wrapper,
+.swagger-ui .opblock,
+.swagger-ui .model-box,
+.swagger-ui .info,
+.swagger-ui .scheme-container {
+  background-color: #ffffff;
+  color: #0b0d17;
+}
+
+.swagger-ui .opblock-summary-method,
+.swagger-ui .opblock-summary-path,
+.swagger-ui .opblock-summary-description,
+.swagger-ui .parameter__name,
+.swagger-ui .parameter__type,
+.swagger-ui .response-col_status,
+.swagger-ui .response-col_description {
+  color: #0b0d17;
+}
+
+.swagger-ui textarea,
+.swagger-ui .opblock-body pre,
+.swagger-ui .model-box .model {
+  background-color: #f3f4f6;
+  color: #0b0d17;
+}
+
+.swagger-ui .model-box textarea {
+  background-color: #f3f4f6;
+  color: #0b0d17;
+}
