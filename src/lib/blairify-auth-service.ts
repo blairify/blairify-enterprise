@@ -1,7 +1,7 @@
 import "server-only";
 
 import bcrypt from "bcryptjs";
-import { and, eq } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { db } from "@/db/client";
 import type { Enterprise, User } from "@/db/schema/auth";
 import { enterprises, users } from "@/db/schema/auth";
