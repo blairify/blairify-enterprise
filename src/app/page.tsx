@@ -118,17 +118,17 @@ export default function ContactSalesPage() {
           Enterprise Ready
         </div>
       </section>
-      <section className="w-full bg-white mx-auto border-y border-muted-foreground/40">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-10 sm:py-16 grid gap-5 sm:gap-6 grid-cols-2 lg:grid-cols-4">
+      <section className="w-full dark:bg-[#262624] bg-white mx-auto border-y border-muted-foreground/40">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-10 sm:py-16 grid gap-5 sm:gap-6 grid-cols-2 lg:grid-cols-4 dark:bg-[#262624]">
           {features.map((feature) => (
             <div
               key={feature.title}
-              className="bg-primary-foreground p-4 sm:p-6 rounded-2xl border border-border hover:shadow-xl transition-all hover:-translate-y-1"
+              className="bg-primary-foreground p-4 sm:p-6 rounded-2xl border border-border hover:shadow-xl transition-all hover:-translate-y-1 dark:bg-[#262624] dark:border-primary"
             >
-              <feature.icon className="size-8 mb-4 mx-auto dark:text-black" />
+              <feature.icon className="size-8 mb-4 mx-auto dark:text-primary" />
               <Typography.Body
                 color="secondary"
-                className="mb-2 px-2 text-center dark:text-black"
+                className="mb-2 px-2 text-center dark:text-primary"
               >
                 {feature.title}
               </Typography.Body>
@@ -138,8 +138,8 @@ export default function ContactSalesPage() {
       </section>
 
       <section className="mx-auto mt-16 px-4 sm:px-0 flex flex-col items-center justify-center gap-8">
-        <div className="bg-card border border-muted-foreground/40 rounded-2xl shadow-2xl overflow-hidden flex flex-col items-center justify-center max-w-sm">
-          <div className="p-6">
+        <div className="bg-white border border-muted-foreground/40 rounded-2xl shadow-2xl overflow-hidden flex flex-col items-center justify-center max-w-sm">
+          <div className="p-6 rounded-2xl">
             <Image
               src="/assets/mail.png"
               alt="Sales mail link"
@@ -162,7 +162,7 @@ export default function ContactSalesPage() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-muted-foreground/40 py-4 bg-background">
+      <footer className="border-t border-muted-foreground/40 py-4 bg-background dark:bg-[#262624]">
         <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-between max-w-4xl mx-auto px-4 sm:px-6 text-center sm:text-left">
           <Logo size="sm" />
           <Typography.Caption className="text-foreground text-sm">
