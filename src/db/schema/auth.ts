@@ -66,6 +66,7 @@ export const sessions = pgTable("sessions", {
 });
 
 export const permissionKeyEnum = pgEnum("permission_key", [
+  "manage_users",
   "manage_jobs",
   "manage_candidates",
   "view_reports",

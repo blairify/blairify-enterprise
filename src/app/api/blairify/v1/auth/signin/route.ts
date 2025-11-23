@@ -1,7 +1,23 @@
 import { signinUser } from "@/lib/blairify-auth-service";
+import { enforceRateLimit, RateLimitError } from "@/lib/rate-limit";
 import { signinRequestSchema } from "@/lib/validation/blairify-auth";
 
 export async function POST(request: Request): Promise<Response> {
+  try {
+    await enforceRateLimit("signin");
+  } catch (error) {
+    if (error instanceof RateLimitError) {
+      return Response.json(
+        {
+          error: "RATE_LIMITED",
+          message: "Too many attempts. Please try again later.",
+        },
+        { status: 429 },
+      );
+    }
+    throw error;
+  }
+
   const json = await request.json().catch(() => null);
 
   const parsed = signinRequestSchema.safeParse(json);

@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 import type { ZodError } from "zod";
 import { signupEnterpriseAdmin } from "@/lib/blairify-auth-service";
+import { enforceRateLimit, RateLimitError } from "@/lib/rate-limit";
 import {
   type SignupRequest,
   signupRequestSchema,
@@ -42,6 +43,19 @@ export async function signupAction(
   _prevState: SignupFormState,
   formData: FormData,
 ): Promise<SignupFormState> {
+  try {
+    await enforceRateLimit("signup");
+  } catch (error) {
+    if (error instanceof RateLimitError) {
+      return {
+        status: "error",
+        message: "Too many attempts. Please try again later.",
+        fieldErrors: {},
+      };
+    }
+    throw error;
+  }
+
   const rawValues = {
     fullName: formData.get("fullName"),
     email: formData.get("email"),
@@ -71,9 +85,18 @@ export async function signupAction(
       case "ENTERPRISE_DOMAIN_EXISTS": {
         return {
           status: "error",
-          message: result.message,
+          message: "Unable to create enterprise account.",
           fieldErrors: {
-            companyDomain: [result.message],
+            companyDomain: ["Unable to create enterprise account."],
+          },
+        };
+      }
+      case "EMAIL_ALREADY_EXISTS": {
+        return {
+          status: "error",
+          message: "Unable to create enterprise account.",
+          fieldErrors: {
+            email: ["Unable to create enterprise account."],
           },
         };
       }

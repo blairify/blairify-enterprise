@@ -9,6 +9,7 @@ interface DashboardLayoutProps {
   userName: string;
   userEmail: string;
   enterpriseName: string;
+  canManageUsers: boolean;
 }
 
 export function DashboardLayout({
@@ -16,6 +17,7 @@ export function DashboardLayout({
   userName,
   userEmail,
   enterpriseName,
+  canManageUsers,
 }: DashboardLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -24,6 +26,7 @@ export function DashboardLayout({
       <DashboardSidebar
         sidebarOpen={sidebarOpen}
         setSidebarOpen={setSidebarOpen}
+        userAdmin={canManageUsers}
       />
       <div className="flex-1 lg:ml-0 flex flex-col overflow-hidden">
         <DashboardNavbar

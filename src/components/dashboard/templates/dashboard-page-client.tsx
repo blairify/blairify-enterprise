@@ -7,18 +7,21 @@ interface DashboardPageClientProps {
   userName: string;
   userEmail: string;
   enterpriseName: string;
+  canManageUsers: boolean;
 }
 
 export function DashboardPageClient({
   userName,
   userEmail,
   enterpriseName,
+  canManageUsers,
 }: DashboardPageClientProps) {
   return (
     <DashboardLayout
       userName={userName}
       userEmail={userEmail}
       enterpriseName={enterpriseName}
+      canManageUsers={canManageUsers}
     >
       <DashboardContent />
     </DashboardLayout>

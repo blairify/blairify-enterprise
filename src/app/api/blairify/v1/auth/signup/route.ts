@@ -1,7 +1,23 @@
 import { signupEnterpriseAdmin } from "@/lib/blairify-auth-service";
+import { enforceRateLimit, RateLimitError } from "@/lib/rate-limit";
 import { signupRequestSchema } from "@/lib/validation/blairify-auth";
 
 export async function POST(request: Request): Promise<Response> {
+  try {
+    await enforceRateLimit("signup");
+  } catch (error) {
+    if (error instanceof RateLimitError) {
+      return Response.json(
+        {
+          error: "RATE_LIMITED",
+          message: "Too many attempts. Please try again later.",
+        },
+        { status: 429 },
+      );
+    }
+    throw error;
+  }
+
   const json = await request.json().catch(() => null);
 
   const parsed = signupRequestSchema.safeParse(json);
@@ -20,6 +36,15 @@ export async function POST(request: Request): Promise<Response> {
   if (!result.ok) {
     switch (result.error) {
       case "ENTERPRISE_DOMAIN_EXISTS": {
+        return Response.json(
+          {
+            error: result.error,
+            message: result.message,
+          },
+          { status: 409 },
+        );
+      }
+      case "EMAIL_ALREADY_EXISTS": {
         return Response.json(
           {
             error: result.error,

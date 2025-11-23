@@ -8,10 +8,12 @@ if (!connectionString) {
   throw new Error("DATABASE_URL is not set");
 }
 
-console.log(
-  "[db] DATABASE_URL:",
-  connectionString.replace(/:\/\/[^@]+@/, "://***:***@"),
-);
+if (process.env.NODE_ENV !== "production") {
+  console.log(
+    "[db] DATABASE_URL:",
+    connectionString.replace(/:\/\/[^@]+@/, "://***:***@"),
+  );
+}
 
 const pool = new Pool({ connectionString });
 
@@ -26,9 +28,9 @@ export async function withEnterpriseDb<T>(
   const client = await pool.connect();
 
   try {
-    await client.query("SET LOCAL app.current_enterprise_id = $1", [
-      enterpriseId,
-    ]);
+    await client.query(
+      `SET LOCAL app.current_enterprise_id = '${enterpriseId}'`,
+    );
 
     const scopedDb = drizzle(client, { schema }) as unknown as Database;
 

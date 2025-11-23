@@ -1,6 +1,18 @@
 "use client";
 
-import { Home, X } from "lucide-react";
+import {
+  Building2,
+  Database,
+  GitBranch,
+  Home,
+  Inbox,
+  MessageSquare,
+  Mic,
+  Settings,
+  User,
+  Users,
+  X,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Logo from "@/components/common/atoms/logo-blairify";
@@ -15,6 +27,7 @@ interface DashboardSidebarProps {
 export default function DashboardSidebar({
   sidebarOpen,
   setSidebarOpen,
+  userAdmin,
 }: DashboardSidebarProps) {
   const pathname = usePathname();
 
@@ -60,12 +73,176 @@ export default function DashboardSidebar({
               Dashboard
             </span>
           </Link>
+
+          <Link
+            href="/dashboard/organisations"
+            className={`flex items-center space-x-3 px-3 py-2 rounded-md transition-colors w-full ${
+              isActive("/dashboard/organisations")
+                ? "bg-sidebar-primary text-sidebar-primary-foreground"
+                : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+            }`}
+          >
+            <Building2 className="h-5 w-5 flex-shrink-0" />
+            <span
+              className={`truncate ${
+                isActive("/dashboard/organisations") ? "font-medium" : ""
+              }`}
+            >
+              Organisations
+            </span>
+          </Link>
+
+          <Link
+            href="/dashboard/candidates"
+            className={`flex items-center space-x-3 px-3 py-2 rounded-md transition-colors w-full ${
+              isActive("/dashboard/candidates")
+                ? "bg-sidebar-primary text-sidebar-primary-foreground"
+                : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+            }`}
+          >
+            <User className="h-5 w-5 flex-shrink-0" />
+            <span
+              className={`truncate ${
+                isActive("/dashboard/candidates") ? "font-medium" : ""
+              }`}
+            >
+              Candidates
+            </span>
+          </Link>
+
+          <Link
+            href="/dashboard/flows"
+            className={`flex items-center space-x-3 px-3 py-2 rounded-md transition-colors w-full ${
+              isActive("/dashboard/flows")
+                ? "bg-sidebar-primary text-sidebar-primary-foreground"
+                : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+            }`}
+          >
+            <GitBranch className="h-5 w-5 flex-shrink-0" />
+            <span
+              className={`truncate ${
+                isActive("/dashboard/flows") ? "font-medium" : ""
+              }`}
+            >
+              My flows
+            </span>
+          </Link>
+
+          <Link
+            href="/dashboard/test-interview"
+            className={`flex items-center space-x-3 px-3 py-2 rounded-md transition-colors w-full ${
+              isActive("/dashboard/test-interview")
+                ? "bg-sidebar-primary text-sidebar-primary-foreground"
+                : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+            }`}
+          >
+            <Mic className="h-5 w-5 flex-shrink-0" />
+            <span
+              className={`truncate ${
+                isActive("/dashboard/test-interview") ? "font-medium" : ""
+              }`}
+            >
+              Test interview
+            </span>
+          </Link>
+
+          <Link
+            href="/dashboard/requests"
+            className={`flex items-center space-x-3 px-3 py-2 rounded-md transition-colors w-full ${
+              isActive("/dashboard/requests")
+                ? "bg-sidebar-primary text-sidebar-primary-foreground"
+                : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+            }`}
+          >
+            <Inbox className="h-5 w-5 flex-shrink-0" />
+            <span
+              className={`truncate ${
+                isActive("/dashboard/requests") ? "font-medium" : ""
+              }`}
+            >
+              Requests
+            </span>
+          </Link>
+
+          <Link
+            href="/dashboard/chat"
+            className={`flex items-center space-x-3 px-3 py-2 rounded-md transition-colors w-full ${
+              isActive("/dashboard/chat")
+                ? "bg-sidebar-primary text-sidebar-primary-foreground"
+                : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+            }`}
+          >
+            <MessageSquare className="h-5 w-5 flex-shrink-0" />
+            <span
+              className={`truncate ${
+                isActive("/dashboard/chat") ? "font-medium" : ""
+              }`}
+            >
+              Chat
+            </span>
+          </Link>
+
+          <Link
+            href="/dashboard/settings"
+            className={`flex items-center space-x-3 px-3 py-2 rounded-md transition-colors w-full ${
+              isActive("/dashboard/settings")
+                ? "bg-sidebar-primary text-sidebar-primary-foreground"
+                : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+            }`}
+          >
+            <Settings className="h-5 w-5 flex-shrink-0" />
+            <span
+              className={`truncate ${
+                isActive("/dashboard/settings") ? "font-medium" : ""
+              }`}
+            >
+              Settings
+            </span>
+          </Link>
+
+          <Link
+            href="/dashboard/storage"
+            className={`flex items-center space-x-3 px-3 py-2 rounded-md transition-colors w-full ${
+              isActive("/dashboard/storage")
+                ? "bg-sidebar-primary text-sidebar-primary-foreground"
+                : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+            }`}
+          >
+            <Database className="h-5 w-5 flex-shrink-0" />
+            <span
+              className={`truncate ${
+                isActive("/dashboard/storage") ? "font-medium" : ""
+              }`}
+            >
+              Storage
+            </span>
+          </Link>
+
+          {userAdmin ? (
+            <Link
+              href="/dashboard/admin/users"
+              className={`flex items-center space-x-3 px-3 py-2 rounded-md transition-colors w-full ${
+                isActive("/dashboard/admin/users")
+                  ? "bg-sidebar-primary text-sidebar-primary-foreground"
+                  : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+              }`}
+            >
+              <Users className="h-5 w-5 flex-shrink-0" />
+              <span
+                className={`truncate ${
+                  isActive("/dashboard/admin/users") ? "font-medium" : ""
+                }`}
+              >
+                Manage users
+              </span>
+            </Link>
+          ) : null}
         </nav>
 
         {/* Footer - Sticky at bottom */}
         <div className="mt-auto p-4 border-t border-sidebar-border">
           <p className="text-xs text-sidebar-foreground/60 text-center">
-            © Rights Reserved Blairify
+            &copy; Rights Reserved Blairify
           </p>
         </div>
       </div>

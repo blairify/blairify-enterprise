@@ -12,6 +12,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" title="Blairify" suppressHydrationWarning>
+      <head>
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Tinos:wght@400;700&display=swap"
+        />
+      </head>
       <body className="font-sans antialiased min-h-screen bg-background text-foreground">
         <Suspense fallback={<div>Loading...</div>}>
           <ThemeProvider

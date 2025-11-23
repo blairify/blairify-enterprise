@@ -18,3 +18,16 @@ export async function logoutAction(): Promise<void> {
   await clearSessionCookie();
   redirect("/signin");
 }
+
+export async function logoutAllSessionsAction(): Promise<void> {
+  const auth = await getCurrentAuth();
+
+  if (!auth) {
+    await clearSessionCookie();
+    redirect("/signin");
+  }
+
+  await db.delete(sessions).where(eq(sessions.userId, auth.user.id));
+  await clearSessionCookie();
+  redirect("/signin");
+}

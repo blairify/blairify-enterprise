@@ -1,8 +1,8 @@
 import SigninForm from "./signin-form";
 
-export default async function SigninPage() {
+export default function SigninPage() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-primary/5 via-background to-primary/5 px-4">
+    <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="w-full max-w-md rounded-xl border bg-card/80 p-8 shadow-lg backdrop-blur">
         <div className="mb-6 text-center">
           <h1 className="text-2xl font-semibold tracking-tight">

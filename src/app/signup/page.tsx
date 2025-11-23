@@ -1,8 +1,8 @@
 import SignupForm from "./signup-form";
 
-export default async function SignupPage() {
+export default function SignupPage() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-primary/5 via-background to-primary/5 px-4">
+    <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="w-full max-w-xl rounded-xl border bg-card/80 p-8 shadow-lg backdrop-blur">
         <div className="mb-6 text-center">
           <h1 className="text-2xl font-semibold tracking-tight">

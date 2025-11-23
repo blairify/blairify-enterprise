@@ -3,6 +3,7 @@ import { Suspense } from "react";
 
 import LoadingPage from "@/components/common/atoms/loading-page";
 import { DashboardPageClient } from "@/components/dashboard/templates/dashboard-page-client";
+import { hasPermission } from "@/lib/permissions";
 import { requireAuth } from "@/lib/server-auth";
 
 export const metadata: Metadata = {
@@ -21,6 +22,7 @@ export default async function DashboardPage() {
   const userName = auth.user.fullName;
   const userEmail = auth.user.email;
   const enterpriseName = auth.enterprise.name;
+  const canManageUsers = hasPermission(auth.user, "manage_users");
 
   return (
     <Suspense fallback={<LoadingPage message="Loading dashboard..." />}>
@@ -28,6 +30,7 @@ export default async function DashboardPage() {
         userName={userName}
         userEmail={userEmail}
         enterpriseName={enterpriseName}
+        canManageUsers={canManageUsers}
       />
     </Suspense>
   );

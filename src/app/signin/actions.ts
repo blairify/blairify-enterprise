@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 import type { ZodError } from "zod";
 import { signinUser } from "@/lib/blairify-auth-service";
+import { enforceRateLimit, RateLimitError } from "@/lib/rate-limit";
 import {
   type SigninRequest,
   signinRequestSchema,
@@ -44,6 +45,19 @@ export async function signinAction(
   _prevState: SigninFormState,
   formData: FormData,
 ): Promise<SigninFormState> {
+  try {
+    await enforceRateLimit("signin");
+  } catch (error) {
+    if (error instanceof RateLimitError) {
+      return {
+        status: "error",
+        message: "Too many attempts. Please try again later.",
+        fieldErrors: {},
+      };
+    }
+    throw error;
+  }
+
   const rawValues = {
     email: formData.get("email"),
     password: formData.get("password"),

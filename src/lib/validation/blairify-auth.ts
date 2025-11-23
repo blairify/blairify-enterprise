@@ -38,3 +38,15 @@ export const signinRequestExample: SigninRequest = {
   email: "alex.carter@acme.com",
   password: "Blairify!2025",
 };
+
+export const createEnterpriseUserSchema = z.object({
+  fullName: z.string().min(1, "Full name is required"),
+  email: z.string().email("Enter a valid work email"),
+  password: z.string().min(8, "Password must be at least 8 characters"),
+  jobTitle: z.string().min(1, "Your role/position is required"),
+  role: z.enum(["ENTERPRISE_ADMIN", "RECRUITER", "READ_ONLY"]),
+});
+
+export type CreateEnterpriseUserRequest = z.infer<
+  typeof createEnterpriseUserSchema
+>;

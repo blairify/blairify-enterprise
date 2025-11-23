@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { logoutAction } from "./actions";
 
-export default async function LogoutPage() {
+export default function LogoutPage() {
   return (
     <div className="flex min-h-screen items-center justify-center px-4">
       <div className="w-full max-w-sm rounded-xl border bg-card/80 p-8 shadow-lg backdrop-blur">
