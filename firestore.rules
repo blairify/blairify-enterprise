@@ -1,0 +1,248 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper function to check authentication
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return request.auth.uid == userId;
+    }
+    
+    function isSuperAdmin() {
+      return request.auth.uid == 'IO77D68k8EcS9mzAA5tYsepiI532';
+    }
+    
+    function isAdmin() {
+      return isSuperAdmin() || get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+    
+    // Validate achievement/XP updates to prevent cheating
+    function validateAchievementUpdate(newData, oldData) {
+      // Allow if admin
+      return isAdmin() ||
+        // Or validate that XP/level/badges can only increase, not decrease
+        ((!newData.diff(oldData).affectedKeys().hasAny(['experiencePoints']) || 
+          newData.experiencePoints >= oldData.get('experiencePoints', 0)) &&
+         (!newData.diff(oldData).affectedKeys().hasAny(['level']) || 
+          newData.level >= oldData.get('level', 1)) &&
+         (!newData.diff(oldData).affectedKeys().hasAny(['badgesUnlocked']) || 
+          (newData.badgesUnlocked is list && 
+           newData.badgesUnlocked.size() >= oldData.get('badgesUnlocked', []).size())));
+    }
+
+    // ===== USERS COLLECTION =====
+    match /users/{userId} {
+      allow read: if isSignedIn() && (isOwner(userId) || isAdmin());
+      allow create: if isSignedIn();
+      
+      // Allow users to update their own profile with validation
+      allow update: if isSignedIn() && isOwner(userId) && 
+        // Validate achievement/XP fields if they're being updated
+        (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['badgesUnlocked', 'experiencePoints', 'level']) ||
+          (validateAchievementUpdate(request.resource.data, resource.data)));
+      
+      allow delete: if isSignedIn() && isOwner(userId);
+      
+      // User preferences subcollection
+      match /preferences/{document=**} {
+        allow read, write: if isSignedIn() && isOwner(userId);
+      }
+      
+      // User practice progress
+      match /practice-progress/{questionId} {
+        allow read, write: if isSignedIn() && isOwner(userId);
+      }
+      
+      // User skills subcollection (keep for backward compatibility)
+      match /skills/{skillId} {
+        allow read, write: if isSignedIn() && isOwner(userId);
+      }
+      
+      // User sessions subcollection (keep for backward compatibility)
+      match /sessions/{sessionId} {
+        allow read, write: if isSignedIn() && isOwner(userId);
+      }
+      
+      // User analytics subcollection
+      match /analytics/{analyticsId} {
+        allow read, write: if isSignedIn() && isOwner(userId);
+      }
+      
+      // User progress subcollection
+      match /progress/{progressId} {
+        allow read, write: if isSignedIn() && isOwner(userId);
+      }
+      
+      // User activities subcollection
+      match /activities/{activityId} {
+        allow read, write: if isSignedIn() && isOwner(userId);
+      }
+      
+      // User achievements subcollection (detailed achievement tracking)
+      match /achievements/{achievementId} {
+        allow read: if isSignedIn() && isOwner(userId);
+        allow create: if isSignedIn() && isOwner(userId);
+        // Only allow updates that don't decrease progress
+        allow update: if isSignedIn() && isOwner(userId) &&
+          (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['progress']) ||
+            request.resource.data.progress >= resource.data.progress);
+        allow delete: if isSignedIn() && (isOwner(userId) || isAdmin());
+      }
+      
+      // User badges subcollection (for detailed badge metadata)
+      match /badges/{badgeId} {
+        allow read: if isSignedIn() && isOwner(userId);
+        allow create: if isSignedIn() && isOwner(userId);
+        allow update, delete: if isSignedIn() && (isOwner(userId) || isAdmin());
+      }
+    }
+
+    // ===== INTERVIEW SESSIONS =====
+    match /interview-sessions/{sessionId} {
+      allow create: if isSignedIn();
+      allow read, update: if isSignedIn() && 
+        (resource.data.uid == request.auth.uid || isAdmin());
+      allow delete: if isSignedIn() && 
+        (resource.data.uid == request.auth.uid || isAdmin());
+      
+      // Subcollections
+      match /{document=**} {
+        allow read, write: if isSignedIn() && 
+          (get(/databases/$(database)/documents/interview-sessions/$(sessionId)).data.uid == request.auth.uid || isAdmin());
+      }
+    }
+
+    // ===== PRACTICE QUESTIONS (Public Read, Admin Write) =====
+    match /practice-questions/{questionId} {
+      allow read: if isSignedIn();
+      allow create, update, delete: if isSignedIn() && isAdmin();
+      
+      // Usage stats subcollection
+      match /stats/{statType} {
+        allow read: if isSignedIn();
+        allow write: if isSignedIn() && isAdmin();
+      }
+    }
+
+    // ===== NEW PRACTICE QUESTIONS COLLECTION (Public Read for Published, Admin Write) =====
+    match /practice_questions/{questionId} {
+      // Allow unauthenticated read for published questions (for API routes)
+      allow read: if resource.data.status == 'published' || isSignedIn();
+      allow create, update, delete: if isSignedIn() && isAdmin();
+    }
+
+    // ===== PRACTICE COLLECTIONS =====
+    match /practice-collections/{collectionId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn();
+      allow update, delete: if isSignedIn() && 
+        (resource.data.createdBy == request.auth.uid || isAdmin());
+    }
+
+    // ===== TRAINING SETS =====
+    match /training-sets/{setId} {
+      allow read: if isSignedIn() && 
+        (resource.data.uid == request.auth.uid || resource.data.isPublic == true || isAdmin());
+      allow create: if isSignedIn();
+      allow update, delete: if isSignedIn() && 
+        (resource.data.uid == request.auth.uid || isAdmin());
+    }
+
+    // ===== AI RESPONSES (Immutable, Read-Only) =====
+    match /ai-responses/{responseId} {
+      allow read: if isSignedIn() && 
+        (get(/databases/$(database)/documents/interview-sessions/$(resource.data.sessionId)).data.uid == request.auth.uid || isAdmin());
+      allow create: if isSignedIn();
+      allow delete: if false; // Immutable - no deletions
+    }
+
+    // ===== QUESTION FACETS (Public Read, Admin Write) =====
+    match /question-facets/{document=**} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn() && isAdmin();
+    }
+
+    // ===== USER SKILLS =====
+    match /user-skills/{userId}/{skillId} {
+      allow read, write: if isSignedIn() && isOwner(userId);
+    }
+
+    // ===== ANALYTICS (User-scoped) =====
+    match /analytics/{userId}/{document=**} {
+      allow read, write: if isSignedIn() && isOwner(userId);
+    }
+
+    // ===== PROGRESS TRACKING =====
+    match /progress-tracking/{trackingId} {
+      allow read, write: if isSignedIn() && 
+        (resource.data.uid == request.auth.uid || isAdmin());
+    }
+
+    // ===== ACTIVITY LOGS =====
+    match /activity-logs/{activityId} {
+      allow read, write: if isSignedIn() && 
+        (resource.data.uid == request.auth.uid || isAdmin());
+    }
+
+    // ===== GLOBAL ACHIEVEMENTS DEFINITIONS (Read-only for users, Admin write) =====
+    match /achievement-definitions/{achievementId} {
+      allow read: if isSignedIn();
+      allow create, update, delete: if isSignedIn() && isAdmin();
+    }
+    
+    // ===== GLOBAL BADGE DEFINITIONS (Read-only for users, Admin write) =====
+    match /badge-definitions/{badgeId} {
+      allow read: if isSignedIn();
+      allow create, update, delete: if isSignedIn() && isAdmin();
+    }
+    
+    // ===== USER ACHIEVEMENT PROGRESS (User-specific tracking) =====
+    match /user-achievements/{userId}/{achievementId} {
+      allow read: if isSignedIn() && (isOwner(userId) || isAdmin());
+      allow create: if isSignedIn() && isOwner(userId);
+      allow update: if isSignedIn() && isOwner(userId) &&
+        // Validate progress can only increase
+        (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['progress']) ||
+          request.resource.data.progress >= resource.data.get('progress', 0));
+      allow delete: if isSignedIn() && isAdmin();
+    }
+    
+    // ===== BACKWARD COMPATIBILITY =====
+    // Keep old collections for existing data
+    match /questions/{questionId} {
+      allow read: if isSignedIn();
+      allow write: if false;
+    }
+    
+    match /connection-test/{docId} {
+      allow read: if isSignedIn();
+    }
+
+    // ===== JOBS CACHE (Public Read, System Write) =====
+    match /cached_jobs/{jobId} {
+      allow read: if true; // Public read for all users (no auth required)
+      allow write: if false; // Only backend can write via Admin SDK
+    }
+
+    match /jobs_metadata/{metadataId} {
+      allow read: if true; // Public read for metadata (no auth required)
+      allow write: if false; // Only backend can write via Admin SDK
+    }
+
+    // ===== BUG REPORTS =====
+    match /bug_reports/{reportId} {
+      allow create: if true; // Anyone can submit a bug report (even anonymous users)
+      allow read: if isSignedIn() && isAdmin(); // Only admins can read bug reports
+      allow update, delete: if isSignedIn() && isAdmin(); // Only admins can modify/delete
+    }
+
+    // ===== DEFAULT DENY =====
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
