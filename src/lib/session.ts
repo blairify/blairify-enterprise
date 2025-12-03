@@ -102,7 +102,7 @@ export async function requireAuth(): Promise<AuthContext> {
   const auth = await getCurrentAuth();
 
   if (!auth) {
-    redirect("/signin");
+    redirect("/auth/signin");
   }
 
   return auth;

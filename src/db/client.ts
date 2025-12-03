@@ -8,13 +8,6 @@ if (!connectionString) {
   throw new Error("DATABASE_URL is not set");
 }
 
-if (process.env.NODE_ENV !== "production") {
-  console.log(
-    "[db] DATABASE_URL:",
-    connectionString.replace(/:\/\/[^@]+@/, "://***:***@"),
-  );
-}
-
 const pool = new Pool({ connectionString });
 
 export const db = drizzle(pool, { schema });

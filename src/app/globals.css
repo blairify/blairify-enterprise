@@ -4,104 +4,104 @@
 @custom-variant dark (&:is(.dark *));
 
 /* ==============================
-   LIGHT MODE — Blairify palette
+   LIGHT MODE  Blairify palette
    ============================== */
 :root {
-  --background: #f6f5ed; /* Warm light base */
-  --foreground: #000000; /* Black text */
+  --background: #faf9f5; /* Warm light base */
+  --foreground: #141413; /* Black text */
   --card: #ffffff; /* Light cards */
-  --card-foreground: #000000;
+  --card-foreground: #141413;
   --popover: #ffffff;
-  --popover-foreground: #000000;
+  --popover-foreground: #141413;
 
-  --primary: #c0644a; /* Brand accent */
-  --logo: #c0644a;
-  --primary-foreground: #f6f5ed;
+  --primary: #c96442; /* Brand accent */
+  --logo: #c96442;
+  --primary-foreground: #faf9f5;
 
-  --secondary: #f6f5ed;
-  --secondary-foreground: #000000;
+  --secondary: #b0aea5;
+  --secondary-foreground: #141413;
 
-  --muted: #f6f5ed;
-  --muted-foreground: #989997;
+  --muted: #b0aea5;
+  --muted-foreground: #878280;
 
-  --accent: #967d6d;
-  --accent-foreground: #f6f5ed;
+  --accent: #878280;
+  --accent-foreground: #faf9f5;
 
   --destructive: #dc2626;
   --destructive-foreground: #ffffff;
 
-  --border: #989997;
-  --input: #f6f5ed;
-  --ring: #c0644a;
+  --border: #878280;
+  --input: #faf9f5;
+  --ring: #c96442;
 
   /* Chart palette */
-  --chart-1: #c0644a;
-  --chart-2: #967d6d;
-  --chart-3: #989997;
-  --chart-4: #f6f5ed;
-  --chart-5: #000000;
+  --chart-1: #c96442;
+  --chart-2: #b0aea5;
+  --chart-3: #878280;
+  --chart-4: #87867f;
+  --chart-5: #141413;
 
   --radius: 0.75rem;
 
   /* Sidebar */
-  --sidebar: #f6f5ed;
-  --sidebar-foreground: #000000;
-  --sidebar-primary: #c0644a;
-  --sidebar-primary-foreground: #f6f5ed;
-  --sidebar-accent: #967d6d;
-  --sidebar-accent-foreground: #f6f5ed;
-  --sidebar-border: #989997;
-  --sidebar-ring: #c0644a;
+  --sidebar: #faf9f5;
+  --sidebar-foreground: #141413;
+  --sidebar-primary: #c96442;
+  --sidebar-primary-foreground: #faf9f5;
+  --sidebar-accent: #b0aea5;
+  --sidebar-accent-foreground: #141413;
+  --sidebar-border: #878280;
+  --sidebar-ring: #c96442;
 }
 
 /* ==============================
-   DARK MODE — Blairify palette
+   DARK MODE  Blairify palette
    ============================== */
 .dark {
-  --background: #000000; /* Black base */
-  --foreground: #f6f5ed; /* Light warm text */
-  --card: #111111;
-  --card-foreground: #f6f5ed;
-  --popover: #111111;
-  --popover-foreground: #f6f5ed;
+  --background: #141413; /* Black base */
+  --foreground: #faf9f5; /* Light warm text */
+  --card: #1f1e1d;
+  --card-foreground: #faf9f5;
+  --popover: #1f1e1d;
+  --popover-foreground: #faf9f5;
 
-  --primary: #c0644a;
-  --primary-foreground: #f6f5ed;
+  --primary: #c96442;
+  --primary-foreground: #faf9f5;
 
-  --secondary: #181818;
-  --secondary-foreground: #f6f5ed;
+  --secondary: #1f1e1d;
+  --secondary-foreground: #faf9f5;
 
-  --muted: #181818;
-  --muted-foreground: #989997;
+  --muted: #1f1e1d;
+  --muted-foreground: #878280;
 
-  --accent: #967d6d;
-  --accent-foreground: #f6f5ed;
+  --accent: #878280;
+  --accent-foreground: #faf9f5;
 
   --destructive: #ef4444;
-  --destructive-foreground: #f6f5ed;
+  --destructive-foreground: #faf9f5;
 
-  --border: #262626;
-  --input: #181818;
-  --ring: #c0644a;
+  --border: #87867f;
+  --input: #1f1e1d;
+  --ring: #c96442;
 
   /* Charts */
-  --chart-1: #c0644a;
-  --chart-2: #967d6d;
-  --chart-3: #989997;
-  --chart-4: #f6f5ed;
-  --chart-5: #000000;
+  --chart-1: #c96442;
+  --chart-2: #b0aea5;
+  --chart-3: #878280;
+  --chart-4: #87867f;
+  --chart-5: #faf9f5;
 
   --radius: 0.75rem;
 
   /* Sidebar */
-  --sidebar: #111111;
-  --sidebar-foreground: #f6f5ed;
-  --sidebar-primary: #c0644a;
-  --sidebar-primary-foreground: #f6f5ed;
-  --sidebar-accent: #181818;
-  --sidebar-accent-foreground: #f6f5ed;
-  --sidebar-border: #262626;
-  --sidebar-ring: #c0644a;
+  --sidebar: #1f1e1d;
+  --sidebar-foreground: #faf9f5;
+  --sidebar-primary: #c96442;
+  --sidebar-primary-foreground: #faf9f5;
+  --sidebar-accent: #878280;
+  --sidebar-accent-foreground: #faf9f5;
+  --sidebar-border: #87867f;
+  --sidebar-ring: #c96442;
 }
 
 /* ==============================
@@ -183,13 +183,13 @@
   }
 
   .dark ::-webkit-scrollbar-track {
-    background: #1a1d21;
+    background: #1f1e1d;
   }
   .dark ::-webkit-scrollbar-thumb {
-    background: #2e3237;
+    background: #878280;
   }
   .dark ::-webkit-scrollbar-thumb:hover {
-    background: #4b4f55;
+    background: #87867f;
   }
 
   * {
@@ -197,7 +197,7 @@
     scrollbar-color: var(--border) var(--muted);
   }
   .dark * {
-    scrollbar-color: #2e3237 #1a1d21;
+    scrollbar-color: #878280 #1f1e1d;
   }
 }
 

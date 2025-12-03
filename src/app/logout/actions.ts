@@ -11,12 +11,12 @@ export async function logoutAction(): Promise<void> {
 
   if (!auth) {
     await clearSessionCookie();
-    redirect("/signin");
+    redirect("/auth/signin");
   }
 
   await db.delete(sessions).where(eq(sessions.id, auth.session.id));
   await clearSessionCookie();
-  redirect("/signin");
+  redirect("/auth/signin");
 }
 
 export async function logoutAllSessionsAction(): Promise<void> {
@@ -24,10 +24,10 @@ export async function logoutAllSessionsAction(): Promise<void> {
 
   if (!auth) {
     await clearSessionCookie();
-    redirect("/signin");
+    redirect("/auth/signin");
   }
 
   await db.delete(sessions).where(eq(sessions.userId, auth.user.id));
   await clearSessionCookie();
-  redirect("/signin");
+  redirect("/auth/signin");
 }

@@ -38,7 +38,7 @@ export default function DashboardSidebar({
   return (
     <>
       <div
-        className={`fixed inset-y-0 left-0 z-50 w-64 h-screen bg-sidebar text-sky-50 border-r border-sidebar-border transform ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} transition-transform duration-200 ease-in-out lg:translate-x-0 lg:static lg:inset-0 flex flex-col overflow-hidden`}
+        className={`fixed inset-y-0 left-0 z-50 w-64 h-screen bg-sidebar text-sidebar-foreground border-r border-sidebar-border transform ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} transition-transform duration-200 ease-in-out lg:translate-x-0 lg:static lg:inset-0 flex flex-col overflow-hidden`}
       >
         <div className="border-b border-border">
           <div className="px-4 h-16 flex items-center">
@@ -251,7 +251,7 @@ export default function DashboardSidebar({
       {sidebarOpen && (
         <button
           type="button"
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden border-0 p-0 w-full h-full"
+          className="fixed inset-0 bg-background/80 z-40 lg:hidden border-0 p-0 w-full h-full"
           onClick={() => setSidebarOpen(false)}
           onKeyDown={(e) => {
             if (e.key === "Escape") {
