@@ -1,0 +1,476 @@
+import {
+  Building,
+  ChartLine,
+  ClipboardList,
+  Cloud,
+  Code,
+  Database,
+  Layers,
+  Rocket,
+  Server,
+  Shield,
+  Smartphone,
+  Target,
+  Timer,
+  Users,
+} from "lucide-react";
+import type * as React from "react";
+import { FaGoogle, FaMicrosoft } from "react-icons/fa";
+import {
+  SiAirbnb,
+  SiAllegro,
+  SiAmazon,
+  SiAnthropic,
+  SiApple,
+  SiAtlassian,
+  SiCanva,
+  SiCloudflare,
+  SiDassaultsystemes,
+  SiDatabricks,
+  SiDeepl,
+  SiElasticsearch,
+  SiFigma,
+  SiGithub,
+  SiKlarna,
+  SiMeta,
+  SiNetflix,
+  SiNokia,
+  SiNotion,
+  SiNvidia,
+  SiOpenai,
+  SiPalantir,
+  SiQualcomm,
+  SiRevolut,
+  SiSap,
+  SiShopify,
+  SiSnowflake,
+  SiSpotify,
+  SiStripe,
+  SiTarget,
+  SiTesla,
+  SiTwilio,
+  SiUber,
+  SiWise,
+  SiZapier,
+} from "react-icons/si";
+
+export interface ConfigStep {
+  id: string;
+  title: string;
+  description: string;
+  icon: React.ElementType;
+}
+
+export const CONFIGURE_STEPS: ConfigStep[] = [
+  {
+    id: "position",
+    title: "Position",
+    description: "Select your target role",
+    icon: Code,
+  },
+  {
+    id: "experience",
+    title: "Skills",
+    description: "Choose your level and tech stack",
+    icon: Target,
+  },
+  {
+    id: "company",
+    title: "Company",
+    description: "Pick your target",
+    icon: Building,
+  },
+  {
+    id: "duration",
+    title: "Duration",
+    description: "Set interview length",
+    icon: Timer,
+  },
+];
+
+export const SENIORITY_LEVELS = [
+  {
+    value: "entry",
+    label: "Entry Level",
+    description: "0-2 years experience",
+    color: "bg-chart-1",
+  },
+  {
+    value: "junior",
+    label: "Junior",
+    description: "0-2 years experience",
+    color: "bg-chart-2",
+  },
+  {
+    value: "mid",
+    label: "Mid-level",
+    description: "2-5 years experience",
+    color: "bg-chart-3",
+  },
+  {
+    value: "senior",
+    label: "Senior",
+    description: "5+ years experience",
+    color: "bg-chart-4",
+  },
+];
+
+export const COMPANY_PROFILES = [
+  {
+    value: "generic",
+    label: "Generic Tech Company",
+    description: "Standard technical questions",
+    icon: Building,
+  },
+  {
+    value: "faang",
+    label: "FAANG-style",
+    description: "Algorithm-heavy, system design focus",
+    icon: SiTarget,
+  },
+  {
+    value: "startup",
+    label: "Startup Environment",
+    description: "Practical, fast-paced questions",
+    icon: Rocket,
+  },
+];
+
+export const POSITIONS = [
+  {
+    value: "frontend",
+    label: "Frontend Developer",
+    icon: Code,
+  },
+  {
+    value: "backend",
+    label: "Backend Developer",
+    icon: Server,
+  },
+  {
+    value: "fullstack",
+    label: "Full Stack Developer",
+    icon: Layers,
+  },
+  {
+    value: "devops",
+    label: "DevOps Engineer",
+    icon: Cloud,
+  },
+  {
+    value: "mobile",
+    label: "Mobile Developer",
+    icon: Smartphone,
+  },
+  {
+    value: "data",
+    label: "Data Engineer",
+    icon: Database,
+  },
+  {
+    value: "data-scientist",
+    label: "Data Scientist",
+    icon: ChartLine,
+  },
+  {
+    value: "cybersecurity",
+    label: "Cybersecurity Engineer",
+    icon: Shield,
+  },
+  {
+    value: "product-manager",
+    label: "Product Manager",
+    icon: ClipboardList,
+  },
+];
+
+export const CONFIGURE_SPECIFIC_COMPANIES = [
+  {
+    value: "google",
+    label: "Google",
+    description: "Algorithm focus, system design",
+    icon: FaGoogle,
+    color: "text-blue-700",
+  },
+  {
+    value: "openai",
+    label: "OpenAI",
+    description: "Applied AI research & developer APIs",
+    icon: SiOpenai,
+    color: "text-white",
+  },
+  {
+    value: "meta",
+    label: "Meta",
+    description: "Large-scale social systems",
+    icon: SiMeta,
+    color: "text-blue-600",
+  },
+  {
+    value: "apple",
+    label: "Apple",
+    description: "Hardware-software integration",
+    icon: SiApple,
+    color: "text-gray-200",
+  },
+  {
+    value: "amazon",
+    label: "Amazon",
+    description: "Scalability, leadership principles",
+    icon: SiAmazon,
+    color: "text-orange-500",
+  },
+  {
+    value: "microsoft",
+    label: "Microsoft",
+    description: "Collaboration, technical depth",
+    icon: FaMicrosoft,
+    color: "text-blue-500",
+  },
+  {
+    value: "nvidia",
+    label: "Nvidia",
+    description: "AI hardware & CUDA software ecosystem",
+    icon: SiNvidia,
+    color: "text-green-600",
+  },
+  {
+    value: "stripe",
+    label: "Stripe",
+    description: "Fintech infrastructure & developer tools",
+    icon: SiStripe,
+    color: "text-purple-600",
+  },
+  {
+    value: "tesla",
+    label: "Tesla",
+    description: "Electric vehicles & energy solutions",
+    icon: SiTesla,
+    color: "text-red-600",
+  },
+  {
+    value: "anthropic",
+    label: "Anthropic",
+    description: "AI safety & LLM research",
+    icon: SiAnthropic,
+    color: "text-orange-600",
+  },
+  {
+    value: "netflix",
+    label: "Netflix",
+    description: "Streaming services platform",
+    icon: SiNetflix,
+    color: "text-red-600",
+  },
+  {
+    value: "palantir",
+    label: "Palantir",
+    description: "Data analytics for enterprises ",
+    icon: SiPalantir,
+    color: "text-white",
+  },
+  {
+    value: "databricks",
+    label: "Databricks",
+    description: "Data engineering & AI platform",
+    icon: SiDatabricks,
+    color: "text-red-500",
+  },
+  {
+    value: "snowflake",
+    label: "Snowflake",
+    description: "Cloud data platform for enterprises",
+    icon: SiSnowflake,
+    color: "text-blue-400",
+  },
+  {
+    value: "cloudflare",
+    label: "Cloudflare",
+    description: "Edge computing & security platform",
+    icon: SiCloudflare,
+    color: "text-orange-500",
+  },
+  {
+    value: "figma",
+    label: "Figma",
+    description: "Collaborative design & prototyping",
+    icon: SiFigma,
+    color: "text-purple-500",
+  },
+  {
+    value: "github",
+    label: "GitHub",
+    description: "Developer collaboration & AI",
+    icon: SiGithub,
+    color: "text-white",
+  },
+  {
+    value: "uber",
+    label: "Uber",
+    description: "Ride-hailing platform & logistics",
+    icon: SiUber,
+    color: "text-white",
+  },
+  {
+    value: "airbnb",
+    label: "Airbnb",
+    description: "Travel & hospitality platform",
+    icon: SiAirbnb,
+    color: "text-red-500",
+  },
+  {
+    value: "spotify",
+    label: "Spotify",
+    description: "Music streaming & audio platform",
+    icon: SiSpotify,
+    color: "text-green-500",
+  },
+  {
+    value: "atlassian",
+    label: "Atlassian",
+    description: "Jira, Confluence, Bitbucket ecosystem",
+    icon: SiAtlassian,
+    color: "text-blue-600",
+  },
+  {
+    value: "elastic",
+    label: "Elastic",
+    description: "Search & observability tools",
+    icon: SiElasticsearch,
+    color: "text-yellow-500",
+  },
+  {
+    value: "shopify",
+    label: "Shopify",
+    description: "E-commerce & merchant solutions",
+    icon: SiShopify,
+    color: "text-green-600",
+  },
+  {
+    value: "deepl",
+    label: "DeepL",
+    description: "AI-powered translation services",
+    icon: SiDeepl,
+    color: "text-blue-600",
+  },
+  {
+    value: "klarna",
+    label: "Klarna",
+    description: "Buy-now-pay-later platform",
+    icon: SiKlarna,
+    color: "text-pink-500",
+  },
+  {
+    value: "revolut",
+    label: "Revolut (UK)",
+    description: "Fintech, banking as a service",
+    icon: SiRevolut,
+    color: "text-blue-600",
+  },
+  {
+    value: "wise",
+    label: "Wise ",
+    description: "Money transfers & global payments",
+    icon: SiWise,
+    color: "text-green-600",
+  },
+  {
+    value: "twilio",
+    label: "Twilio",
+    description: "Communications APIs & CPaaS",
+    icon: SiTwilio,
+    color: "text-red-500",
+  },
+  {
+    value: "zapier",
+    label: "Zapier",
+    description: "Workflow automation & integrations",
+    icon: SiZapier,
+    color: "text-orange-600",
+  },
+  {
+    value: "canva",
+    label: "Canva",
+    description: "Design platform & visual communication",
+    icon: SiCanva,
+    color: "text-blue-500",
+  },
+  {
+    value: "notion",
+    label: "Notion",
+    description: "Productivity & knowledge base",
+    icon: SiNotion,
+    color: "text-white",
+  },
+  {
+    value: "sap",
+    label: "SAP",
+    description: "Enterprise software & cloud solutions",
+    icon: SiSap,
+    color: "text-blue-600",
+  },
+  {
+    value: "dassault",
+    label: "Dassault",
+    description: "3D design & engineering software",
+    icon: SiDassaultsystemes,
+    color: "text-red-600",
+  },
+  {
+    value: "qualcomm",
+    label: "Qualcomm",
+    description: "Semiconductor & wireless technology",
+    icon: SiQualcomm,
+    color: "text-blue-600",
+  },
+  {
+    value: "nokia",
+    label: "Nokia",
+    description: "Telecommunications & network infra",
+    icon: SiNokia,
+    color: "text-blue-700",
+  },
+  {
+    value: "allegro",
+    label: "Allegro",
+    description: "E-commerce marketplace platform",
+    icon: SiAllegro,
+    color: "text-orange-600",
+  },
+];
+
+export const INTERVIEW_DURATIONS = [
+  { value: "15", label: "15 minutes" },
+  { value: "30", label: "30 minutes" },
+  { value: "45", label: "45 minutes" },
+  { value: "60", label: "60 minutes" },
+  { value: "75", label: "75 minutes" },
+  { value: "90", label: "90 minutes" },
+];
+
+export const INTERVIEW_TYPES = [
+  {
+    value: "technical",
+    label: "Technical Interview",
+    description: "Coding and system design",
+    icon: Code,
+  },
+  {
+    value: "bullet",
+    label: "Bullet Interview",
+    description: "Quick 3-question session",
+    icon: Target,
+  },
+  {
+    value: "system-design",
+    label: "System Design",
+    description: "Architecture and scalability",
+    icon: Building,
+  },
+  {
+    value: "mixed",
+    label: "Mixed Interview",
+    description: "Combination of all types",
+    icon: Users,
+  },
+];

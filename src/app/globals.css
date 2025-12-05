@@ -160,10 +160,6 @@
     @apply bg-background text-foreground;
   }
 
-  span {
-    font-family: "Tinos", ui-serif, Georgia, "Times New Roman", serif;
-  }
-
   /* Scrollbars */
   ::-webkit-scrollbar {
     width: 8px;

@@ -4,11 +4,13 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build --turbopack",
+    "build": "next build",
     "start": "next start",
     "test": "jest",
     "nuke": "pnpm exec rimraf node_modules .next dist && pnpm store prune && pnpm install",
-    "fix": "pnpm exec biome check --write --formatter-enabled=true src && pnpm exec biome lint src && pnpm exec tsc --noEmit"
+    "fix": "pnpm exec biome check --write --formatter-enabled=true src && pnpm exec biome lint src && pnpm exec tsc --noEmit",
+    "db:generate": "unset DATABASE_URL && pnpm exec drizzle-kit generate",
+    "db:push": "unset DATABASE_URL && pnpm exec drizzle-kit push"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

@@ -8,6 +8,20 @@
       "when": 1763223190002,
       "tag": "0000_noisy_daredevil",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1764800837704,
+      "tag": "0001_add-organisations",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1764891365157,
+      "tag": "0002_add-organisation-profile-fields",
+      "breakpoints": true
     }
   ]
 }

@@ -24,6 +24,51 @@ export const enterprises = pgTable("enterprises", {
     .notNull(),
 });
 
+export const organisations = pgTable(
+  "organisations",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    enterpriseId: uuid("enterprise_id")
+      .notNull()
+      .references(() => enterprises.id, { onDelete: "cascade" }),
+    name: text("name").notNull(),
+    description: text("description"),
+    industry: text("industry"),
+    location: text("location"),
+    size: varchar("size", { length: 64 }),
+    website: text("website"),
+    hiringFocus: text("hiring_focus"),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => ({
+    enterpriseNameUnique: uniqueIndex(
+      "organisations_enterprise_name_unique",
+    ).on(table.enterpriseId, table.name),
+  }),
+);
+
+export const candidates = pgTable("candidates", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  enterpriseId: uuid("enterprise_id")
+    .notNull()
+    .references(() => enterprises.id, { onDelete: "cascade" }),
+  fullName: varchar("full_name", { length: 255 }).notNull(),
+  email: varchar("email", { length: 255 }),
+  headline: text("headline"),
+  location: text("location"),
+  seniority: varchar("seniority", { length: 100 }),
+  currentCompany: text("current_company"),
+  linkedInUrl: text("linkedin_url"),
+  githubUrl: text("github_url"),
+  cvUrl: text("cv_url"),
+  notes: text("notes"),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+});
+
 export const users = pgTable(
   "users",
   {
@@ -70,6 +115,7 @@ export const permissionKeyEnum = pgEnum("permission_key", [
   "manage_jobs",
   "manage_candidates",
   "view_reports",
+  "manage_organisations",
 ]);
 
 export const permissions = pgTable("permissions", {
@@ -87,6 +133,8 @@ export const rolePermissions = pgTable("role_permissions", {
 });
 
 export type Enterprise = typeof enterprises.$inferSelect;
+export type Organisation = typeof organisations.$inferSelect;
+export type Candidate = typeof candidates.$inferSelect;
 export type User = typeof users.$inferSelect;
 export type Session = typeof sessions.$inferSelect;
 export type Permission = typeof permissions.$inferSelect;

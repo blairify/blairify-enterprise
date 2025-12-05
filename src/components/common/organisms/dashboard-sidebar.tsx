@@ -1,10 +1,8 @@
 "use client";
 
 import {
-  Building2,
   Database,
   GitBranch,
-  Home,
   Inbox,
   MessageSquare,
   Mic,
@@ -43,7 +41,7 @@ export default function DashboardSidebar({
         <div className="border-b border-border">
           <div className="px-4 h-16 flex items-center">
             <div className="flex items-center justify-between w-full">
-              <Logo />
+              <Logo variant="minimal" className="h-8" />
 
               <Button
                 variant="ghost"
@@ -59,115 +57,9 @@ export default function DashboardSidebar({
 
         <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
           <Link
-            href="/dashboard"
+            href="/build-interview"
             className={`flex items-center space-x-3 px-3 py-2 rounded-md transition-colors w-full ${
-              isActive("/dashboard")
-                ? "bg-sidebar-primary text-sidebar-primary-foreground"
-                : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-            }`}
-          >
-            <Home className="h-5 w-5 flex-shrink-0" />
-            <span
-              className={`truncate ${isActive("/dashboard") ? "font-medium" : ""}`}
-            >
-              Dashboard
-            </span>
-          </Link>
-
-          <Link
-            href="/dashboard/organisations"
-            className={`flex items-center space-x-3 px-3 py-2 rounded-md transition-colors w-full ${
-              isActive("/dashboard/organisations")
-                ? "bg-sidebar-primary text-sidebar-primary-foreground"
-                : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-            }`}
-          >
-            <Building2 className="h-5 w-5 flex-shrink-0" />
-            <span
-              className={`truncate ${
-                isActive("/dashboard/organisations") ? "font-medium" : ""
-              }`}
-            >
-              Organisations
-            </span>
-          </Link>
-
-          <Link
-            href="/dashboard/candidates"
-            className={`flex items-center space-x-3 px-3 py-2 rounded-md transition-colors w-full ${
-              isActive("/dashboard/candidates")
-                ? "bg-sidebar-primary text-sidebar-primary-foreground"
-                : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-            }`}
-          >
-            <User className="h-5 w-5 flex-shrink-0" />
-            <span
-              className={`truncate ${
-                isActive("/dashboard/candidates") ? "font-medium" : ""
-              }`}
-            >
-              Candidates
-            </span>
-          </Link>
-
-          <Link
-            href="/dashboard/flows"
-            className={`flex items-center space-x-3 px-3 py-2 rounded-md transition-colors w-full ${
-              isActive("/dashboard/flows")
-                ? "bg-sidebar-primary text-sidebar-primary-foreground"
-                : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-            }`}
-          >
-            <GitBranch className="h-5 w-5 flex-shrink-0" />
-            <span
-              className={`truncate ${
-                isActive("/dashboard/flows") ? "font-medium" : ""
-              }`}
-            >
-              My flows
-            </span>
-          </Link>
-
-          <Link
-            href="/dashboard/test-interview"
-            className={`flex items-center space-x-3 px-3 py-2 rounded-md transition-colors w-full ${
-              isActive("/dashboard/test-interview")
-                ? "bg-sidebar-primary text-sidebar-primary-foreground"
-                : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-            }`}
-          >
-            <Mic className="h-5 w-5 flex-shrink-0" />
-            <span
-              className={`truncate ${
-                isActive("/dashboard/test-interview") ? "font-medium" : ""
-              }`}
-            >
-              Test interview
-            </span>
-          </Link>
-
-          <Link
-            href="/dashboard/requests"
-            className={`flex items-center space-x-3 px-3 py-2 rounded-md transition-colors w-full ${
-              isActive("/dashboard/requests")
-                ? "bg-sidebar-primary text-sidebar-primary-foreground"
-                : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-            }`}
-          >
-            <Inbox className="h-5 w-5 flex-shrink-0" />
-            <span
-              className={`truncate ${
-                isActive("/dashboard/requests") ? "font-medium" : ""
-              }`}
-            >
-              Requests
-            </span>
-          </Link>
-
-          <Link
-            href="/dashboard/chat"
-            className={`flex items-center space-x-3 px-3 py-2 rounded-md transition-colors w-full ${
-              isActive("/dashboard/chat")
+              isActive("/build-interview")
                 ? "bg-sidebar-primary text-sidebar-primary-foreground"
                 : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
             }`}
@@ -175,48 +67,108 @@ export default function DashboardSidebar({
             <MessageSquare className="h-5 w-5 flex-shrink-0" />
             <span
               className={`truncate ${
-                isActive("/dashboard/chat") ? "font-medium" : ""
+                isActive("/build-interview") ? "font-semibold" : "font-medium"
               }`}
             >
-              Chat
+              Build interview
             </span>
           </Link>
 
           <Link
-            href="/dashboard/settings"
+            href="/candidates"
             className={`flex items-center space-x-3 px-3 py-2 rounded-md transition-colors w-full ${
-              isActive("/dashboard/settings")
+              isActive("/candidates")
                 ? "bg-sidebar-primary text-sidebar-primary-foreground"
                 : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
             }`}
           >
-            <Settings className="h-5 w-5 flex-shrink-0" />
+            <User className="h-5 w-5 flex-shrink-0" />
             <span
               className={`truncate ${
-                isActive("/dashboard/settings") ? "font-medium" : ""
+                isActive("/candidates") ? "font-semibold" : "font-medium"
               }`}
             >
-              Settings
+              Candidates
             </span>
           </Link>
 
+          <button
+            type="button"
+            className="flex items-center space-x-3 px-3 py-2 rounded-md w-full text-sidebar-foreground/60 cursor-not-allowed"
+            disabled
+            aria-disabled="true"
+          >
+            <GitBranch className="h-5 w-5 flex-shrink-0 opacity-60" />
+            <span className="flex items-center gap-2 truncate font-medium">
+              <span>My flows</span>
+              <span className="text-[10px] uppercase tracking-wide px-1.5 py-0.5 rounded-full border border-sidebar-border/60">
+                Soon
+              </span>
+            </span>
+          </button>
+
           <Link
-            href="/dashboard/storage"
+            href="/organisations"
             className={`flex items-center space-x-3 px-3 py-2 rounded-md transition-colors w-full ${
-              isActive("/dashboard/storage")
+              isActive("/organisations")
                 ? "bg-sidebar-primary text-sidebar-primary-foreground"
                 : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
             }`}
           >
-            <Database className="h-5 w-5 flex-shrink-0" />
+            <Users className="h-5 w-5 flex-shrink-0" />
             <span
               className={`truncate ${
-                isActive("/dashboard/storage") ? "font-medium" : ""
+                isActive("/organisations") ? "font-semibold" : "font-medium"
               }`}
             >
-              Storage
+              Organisations
             </span>
           </Link>
+
+          <button
+            type="button"
+            className="flex items-center space-x-3 px-3 py-2 rounded-md w-full text-sidebar-foreground/60 cursor-not-allowed"
+            disabled
+            aria-disabled="true"
+          >
+            <Inbox className="h-5 w-5 flex-shrink-0 opacity-60" />
+            <span className="flex items-center gap-2 truncate font-medium">
+              <span>Requests</span>
+              <span className="text-[10px] uppercase tracking-wide px-1.5 py-0.5 rounded-full border border-sidebar-border/60">
+                Soon
+              </span>
+            </span>
+          </button>
+
+          <button
+            type="button"
+            className="flex items-center space-x-3 px-3 py-2 rounded-md w-full text-sidebar-foreground/60 cursor-not-allowed"
+            disabled
+            aria-disabled="true"
+          >
+            <Mic className="h-5 w-5 flex-shrink-0 opacity-60" />
+            <span className="flex items-center gap-2 truncate font-medium">
+              <span>Chat</span>
+              <span className="text-[10px] uppercase tracking-wide px-1.5 py-0.5 rounded-full border border-sidebar-border/60">
+                Soon
+              </span>
+            </span>
+          </button>
+
+          <button
+            type="button"
+            className="flex items-center space-x-3 px-3 py-2 rounded-md w-full text-sidebar-foreground/60 cursor-not-allowed"
+            disabled
+            aria-disabled="true"
+          >
+            <Database className="h-5 w-5 flex-shrink-0 opacity-60" />
+            <span className="flex items-center gap-2 truncate font-medium">
+              <span>Storage</span>
+              <span className="text-[10px] uppercase tracking-wide px-1.5 py-0.5 rounded-full border border-sidebar-border/60">
+                Soon
+              </span>
+            </span>
+          </button>
 
           {userAdmin ? (
             <Link
@@ -227,13 +179,15 @@ export default function DashboardSidebar({
                   : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
               }`}
             >
-              <Users className="h-5 w-5 flex-shrink-0" />
+              <Settings className="h-5 w-5 flex-shrink-0" />
               <span
                 className={`truncate ${
-                  isActive("/dashboard/admin/users") ? "font-medium" : ""
+                  isActive("/dashboard/admin/users")
+                    ? "font-semibold"
+                    : "font-medium"
                 }`}
               >
-                Manage users
+                Manage
               </span>
             </Link>
           ) : null}

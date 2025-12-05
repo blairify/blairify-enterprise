@@ -6,7 +6,8 @@ export type AppPermissionKey =
   | "manage_users"
   | "manage_jobs"
   | "manage_candidates"
-  | "view_reports";
+  | "view_reports"
+  | "manage_organisations";
 
 const ROLE_PERMISSIONS: Record<User["role"], AppPermissionKey[]> = {
   ENTERPRISE_ADMIN: [
@@ -14,8 +15,9 @@ const ROLE_PERMISSIONS: Record<User["role"], AppPermissionKey[]> = {
     "manage_jobs",
     "manage_candidates",
     "view_reports",
+    "manage_organisations",
   ],
-  RECRUITER: ["manage_jobs", "manage_candidates"],
+  RECRUITER: ["manage_jobs", "manage_candidates", "manage_organisations"],
   READ_ONLY: ["view_reports"],
 };
 

@@ -6,10 +6,13 @@ import SignupForm from "../../signup/signup-form";
 
 type AuthMode = "signin" | "signup";
 
+const ENTERPRISE_SIGNUP_PIN = "300820";
+
 interface AuthPageProps {
   params: Promise<{
     mode: string;
   }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }
 
 function normalizeAuthModeParam(modeParam: string): AuthMode {
@@ -20,9 +23,22 @@ function normalizeAuthModeParam(modeParam: string): AuthMode {
   redirect("/auth/signin");
 }
 
-export default async function AuthPage({ params }: AuthPageProps) {
+export default async function AuthPage({
+  params,
+  searchParams,
+}: AuthPageProps) {
   const resolvedParams = await params;
   const mode = normalizeAuthModeParam(resolvedParams.mode);
+
+  if (mode === "signup") {
+    const resolvedSearchParams = await searchParams;
+    const rawPin = resolvedSearchParams.pin;
+    const pin = Array.isArray(rawPin) ? rawPin[0] : rawPin;
+
+    if (pin !== ENTERPRISE_SIGNUP_PIN) {
+      redirect("/");
+    }
+  }
 
   const { title, description } = (() => {
     switch (mode) {

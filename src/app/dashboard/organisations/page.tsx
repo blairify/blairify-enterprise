@@ -2,13 +2,13 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
-  title: "Dashboard | Blairify Enterprise",
+  title: "Organisation Management | Blairify Enterprise",
   robots: {
     index: false,
     follow: false,
   },
 };
 
-export default function DashboardRedirectPage() {
-  redirect("/build-interview");
+export default function LegacyDashboardOrganisationsRedirectPage() {
+  redirect("/organisations");
 }

@@ -92,10 +92,7 @@ export async function signinAction(
         return {
           status: "error",
           message: result.message,
-          fieldErrors: {
-            email: ["Invalid email or password"],
-            password: ["Invalid email or password"],
-          },
+          fieldErrors: {},
         };
       }
       case "USER_INACTIVE": {

@@ -2,10 +2,22 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { FaRegPaperPlane } from "react-icons/fa";
 import { LuDatabaseZap } from "react-icons/lu";
 import { Typography } from "@/components/common/atoms/typography";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 interface LogoProps {
   variant?: "stacked" | "minimal";
@@ -16,7 +28,7 @@ interface LogoProps {
 
 const DEFAULT_REPEAT_COUNT = 7;
 
-export const LogoText = () => <>Blairify</>;
+const LogoText = () => <>Blairify</>;
 
 function Logo({
   variant = "minimal",
@@ -74,6 +86,19 @@ function Logo({
 }
 
 export default function ContactSalesPage() {
+  const router = useRouter();
+  const [pinDialogOpen, setPinDialogOpen] = useState(false);
+  const [pinValue, setPinValue] = useState("");
+  const [pinError, setPinError] = useState<string | null>(null);
+
+  const handlePinDialogOpenChange = (nextOpen: boolean) => {
+    setPinDialogOpen(nextOpen);
+    if (!nextOpen) {
+      setPinValue("");
+      setPinError(null);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-16 pb-12 sm:pt-20 sm:pb-16 text-center">
@@ -90,8 +115,16 @@ export default function ContactSalesPage() {
           Enterprise Ready
         </div>
         <div className="mt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
-          <Button asChild className="w-full sm:w-auto">
-            <Link href="/auth/signup">Register enterprise in beta system</Link>
+          <Button
+            type="button"
+            className="w-full sm:w-auto"
+            onClick={() => {
+              setPinDialogOpen(true);
+              setPinValue("");
+              setPinError(null);
+            }}
+          >
+            Register Enterprise
           </Button>
           <Button asChild variant="outline" className="w-full sm:w-auto">
             <Link href="/auth/signin">Log in</Link>
@@ -132,6 +165,64 @@ export default function ContactSalesPage() {
           </Typography.Caption>
         </div>
       </footer>
+
+      <Dialog open={pinDialogOpen} onOpenChange={handlePinDialogOpenChange}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Enter enterprise access PIN</DialogTitle>
+            <DialogDescription>
+              Enter the 6-digit PIN provided by the Blairify Sales team to
+              register your enterprise.
+            </DialogDescription>
+          </DialogHeader>
+          <form
+            className="space-y-4"
+            onSubmit={(event) => {
+              event.preventDefault();
+
+              if (pinValue === "300820") {
+                setPinError(null);
+                setPinDialogOpen(false);
+                router.push("/auth/signup?pin=300820");
+                return;
+              }
+
+              setPinError("Incorrect PIN. Please try again.");
+            }}
+          >
+            <div className="space-y-2 text-left">
+              <Label htmlFor="enterprise-pin">Access PIN</Label>
+              <Input
+                id="enterprise-pin"
+                type="password"
+                inputMode="numeric"
+                autoComplete="one-time-code"
+                maxLength={6}
+                value={pinValue}
+                onChange={(event) => {
+                  setPinValue(event.target.value);
+                  if (pinError) {
+                    setPinError(null);
+                  }
+                }}
+              />
+              {pinError ? (
+                <p className="text-xs text-destructive">{pinError}</p>
+              ) : null}
+            </div>
+            <DialogFooter>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => handlePinDialogOpenChange(false)}
+              >
+                Cancel
+              </Button>
+              <Button type="submit">Continue</Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
