@@ -152,7 +152,7 @@ export default function ContactSalesPage() {
           <div className="flex flex-col items-center gap-2 sm:items-end">
             <div className="flex items-center gap-4">
               <a
-                href="https://www.instagram.com/blairify"
+                href="https://www.instagram.com/blairtalk"
                 aria-label="Blairify on Instagram"
                 target="_blank"
                 rel="noreferrer"
