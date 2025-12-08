@@ -1,10 +1,11 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { Instagram, Linkedin } from "lucide-react";
 import { FaRegPaperPlane } from "react-icons/fa";
+import { SiX } from "react-icons/si";
 import { LuDatabaseZap } from "react-icons/lu";
 import { Typography } from "@/components/common/atoms/typography";
 import { Button } from "@/components/ui/button";
@@ -130,39 +131,58 @@ export default function ContactSalesPage() {
             <Link href="/auth/signin">Log in</Link>
           </Button>
         </div>
-      </section>
-
-      <section className="mx-auto mt-16 px-4 sm:px-0 flex flex-col items-center justify-center gap-8">
-        <div className="bg-card border border-border/40 rounded-2xl shadow-2xl overflow-hidden flex flex-col items-center justify-center max-w-sm">
-          <div className="p-6 rounded-2xl">
-            <Image
-              src="/assets/mail.png"
-              alt="Sales mail link"
-              width={200}
-              height={200}
-              className="h-auto mx-auto"
-            />
-          </div>
+        <div className="mt-4 flex justify-center">
+          <Button
+            asChild
+            type="button"
+            className="w-full sm:w-auto bg-background text-primary py-2 border border-primary rounded-lg hover:bg-primary/90 transition-all hover:shadow-xl hover:text-primary-foreground hover:-translate-y-0.5 flex items-center justify-center gap-2 text-md"
+          >
+            <a href="mailto:blairify.team@gmail.com">
+              <FaRegPaperPlane className="w-5 h-5" />
+              Contact Sales Team
+            </a>
+          </Button>
         </div>
-        <Button
-          asChild
-          type="button"
-          className="w-60 sm:w-auto mb-10 bg-background text-primary py-2 border border-primary rounded-lg hover:bg-primary/90 transition-all hover:shadow-xl hover:text-primary-foreground hover:-translate-y-0.5 flex items-center justify-center gap-2 text-md"
-        >
-          <a href="mailto:blairify.team@gmail.com">
-            <FaRegPaperPlane className="w-5 h-5" />
-            Contact Sales Team
-          </a>
-        </Button>
       </section>
 
       {/* Footer */}
       <footer className="border-t border-border/40 py-4 bg-background dark:bg-card">
         <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-between max-w-4xl mx-auto px-4 sm:px-6 text-center sm:text-left">
           <Logo size="sm" />
-          <Typography.Caption className="text-foreground text-sm">
-            &copy; 2025 Blairify. All rights reserved.
-          </Typography.Caption>
+          <div className="flex flex-col items-center gap-2 sm:items-end">
+            <div className="flex items-center gap-4">
+              <a
+                href="https://www.instagram.com/blairify"
+                aria-label="Blairify on Instagram"
+                target="_blank"
+                rel="noreferrer"
+                className="text-foreground/80 hover:text-primary transition-colors"
+              >
+                <Instagram className="h-5 w-5" />
+              </a>
+              <a
+                href="https://x.com/BlairifyTeam"
+                aria-label="Blairify on X (Twitter)"
+                target="_blank"
+                rel="noreferrer"
+                className="text-foreground/80 hover:text-primary transition-colors"
+              >
+                <SiX className="h-5 w-5" />
+              </a>
+              <a
+                href="https://www.linkedin.com/company/blairify"
+                aria-label="Blairify on LinkedIn"
+                target="_blank"
+                rel="noreferrer"
+                className="text-foreground/80 hover:text-primary transition-colors"
+              >
+                <Linkedin className="h-5 w-5" />
+              </a>
+            </div>
+            <Typography.Caption className="text-foreground text-sm">
+              &copy; 2025 Blairify. All rights reserved.
+            </Typography.Caption>
+          </div>
         </div>
       </footer>
 
