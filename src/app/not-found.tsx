@@ -46,8 +46,7 @@ export default function NotFound() {
                 asChild
                 variant="outline"
                 size="lg"
-                className="min-w-32 border-[color:var(--border)] text-[color:var(--foreground)] 
-                hover:text-[color:var(--secondary)] hover:border-[color:var(--primary)] transition-colors"
+                className="min-w-32 border-border text-foreground hover:text-secondary hover:border-primary transition-colors"
               >
                 <Link href="/dashboard" aria-label="Navigate to dashboard">
                   Go to Dashboard

@@ -190,7 +190,7 @@ export const CONFIGURE_SPECIFIC_COMPANIES = [
     label: "Google",
     description: "Algorithm focus, system design",
     icon: FaGoogle,
-    color: "text-blue-700",
+    color: "text-accent",
   },
   {
     value: "openai",
@@ -204,7 +204,7 @@ export const CONFIGURE_SPECIFIC_COMPANIES = [
     label: "Meta",
     description: "Large-scale social systems",
     icon: SiMeta,
-    color: "text-blue-600",
+    color: "text-accent",
   },
   {
     value: "apple",
@@ -225,7 +225,7 @@ export const CONFIGURE_SPECIFIC_COMPANIES = [
     label: "Microsoft",
     description: "Collaboration, technical depth",
     icon: FaMicrosoft,
-    color: "text-blue-500",
+    color: "text-accent",
   },
   {
     value: "nvidia",
@@ -281,7 +281,7 @@ export const CONFIGURE_SPECIFIC_COMPANIES = [
     label: "Snowflake",
     description: "Cloud data platform for enterprises",
     icon: SiSnowflake,
-    color: "text-blue-400",
+    color: "text-accent",
   },
   {
     value: "cloudflare",
@@ -330,7 +330,7 @@ export const CONFIGURE_SPECIFIC_COMPANIES = [
     label: "Atlassian",
     description: "Jira, Confluence, Bitbucket ecosystem",
     icon: SiAtlassian,
-    color: "text-blue-600",
+    color: "text-accent",
   },
   {
     value: "elastic",
@@ -351,7 +351,7 @@ export const CONFIGURE_SPECIFIC_COMPANIES = [
     label: "DeepL",
     description: "AI-powered translation services",
     icon: SiDeepl,
-    color: "text-blue-600",
+    color: "text-accent",
   },
   {
     value: "klarna",
@@ -365,7 +365,7 @@ export const CONFIGURE_SPECIFIC_COMPANIES = [
     label: "Revolut (UK)",
     description: "Fintech, banking as a service",
     icon: SiRevolut,
-    color: "text-blue-600",
+    color: "text-accent",
   },
   {
     value: "wise",
@@ -393,7 +393,7 @@ export const CONFIGURE_SPECIFIC_COMPANIES = [
     label: "Canva",
     description: "Design platform & visual communication",
     icon: SiCanva,
-    color: "text-blue-500",
+    color: "text-accent",
   },
   {
     value: "notion",
@@ -407,7 +407,7 @@ export const CONFIGURE_SPECIFIC_COMPANIES = [
     label: "SAP",
     description: "Enterprise software & cloud solutions",
     icon: SiSap,
-    color: "text-blue-600",
+    color: "text-accent",
   },
   {
     value: "dassault",
@@ -421,14 +421,14 @@ export const CONFIGURE_SPECIFIC_COMPANIES = [
     label: "Qualcomm",
     description: "Semiconductor & wireless technology",
     icon: SiQualcomm,
-    color: "text-blue-600",
+    color: "text-accent",
   },
   {
     value: "nokia",
     label: "Nokia",
     description: "Telecommunications & network infra",
     icon: SiNokia,
-    color: "text-blue-700",
+    color: "text-accent",
   },
   {
     value: "allegro",

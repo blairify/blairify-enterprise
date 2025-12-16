@@ -15,13 +15,13 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="bg-[color:var(--background)] text-[color:var(--muted-foreground)] border-t border-[color:var(--border)] transition-colors duration-300 mt-auto">
+    <footer className="bg-background text-muted-foreground border-t border-border transition-colors duration-300 mt-auto">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-10 max-w-7xl">
         <div className="flex flex-col lg:flex-row gap-6 sm:gap-8 mb-6">
           {/* Brand + Legal Links */}
           <div className="w-full flex flex-col items-center lg:items-start gap-4 sm:gap-6">
             {/* Brand */}
-            <h3 className="font-extrabold font-stretch-extra-expanded text-lg sm:text-xl text-[color:var(--foreground)] whitespace-nowrap text-center lg:text-left">
+            <h3 className="font-extrabold font-stretch-extra-expanded text-lg sm:text-xl text-foreground whitespace-nowrap text-center lg:text-left">
               Blairify
             </h3>
 
@@ -33,7 +33,7 @@ export default function Footer() {
                   <Link
                     key={link.href}
                     href={link.href}
-                    className="hover:text-[color:var(--foreground)] transition-colors flex items-center gap-2 py-2 lg:py-0 touch-manipulation"
+                    className="hover:text-foreground transition-colors flex items-center gap-2 py-2 lg:py-0 touch-manipulation"
                   >
                     <Icon className="w-3 h-3 sm:w-4 sm:h-4 lg:w-3 lg:h-3 flex-shrink-0" />
                     <span className="text-xs sm:text-sm lg:text-xs">
@@ -47,11 +47,11 @@ export default function Footer() {
 
           {/* Compliance Badges */}
           <div className="flex flex-wrap gap-2 sm:gap-3 justify-center lg:justify-end w-full lg:w-auto">
-            <span className="flex items-center gap-1.5 sm:gap-2 bg-[color:var(--muted)] bg-opacity-30 px-3 sm:px-4 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm whitespace-nowrap">
+            <span className="flex items-center gap-1.5 sm:gap-2 bg-muted bg-opacity-30 px-3 sm:px-4 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm whitespace-nowrap">
               <Shield className="w-3 h-3 sm:w-4 sm:h-4" />
               GDPR Compliant
             </span>
-            <span className="flex items-center gap-1.5 sm:gap-2 bg-[color:var(--muted)] bg-opacity-30 px-3 sm:px-4 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm whitespace-nowrap">
+            <span className="flex items-center gap-1.5 sm:gap-2 bg-muted bg-opacity-30 px-3 sm:px-4 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm whitespace-nowrap">
               <Lock className="w-3 h-3 sm:w-4 sm:h-4" />
               SSL Secured
             </span>
@@ -59,15 +59,15 @@ export default function Footer() {
         </div>
 
         {/* Bottom Section: Copyright & Contact */}
-        <div className="flex flex-col sm:flex-row justify-center sm:justify-between items-center gap-3 sm:gap-4 pt-4 sm:pt-6 border-t border-[color:var(--border)] text-xs sm:text-sm">
+        <div className="flex flex-col sm:flex-row justify-center sm:justify-between items-center gap-3 sm:gap-4 pt-4 sm:pt-6 border-t border-border text-xs sm:text-sm">
           <p className="text-center sm:text-left">
-            © {currentYear} Blairify. All rights reserved.
+            {currentYear} Blairify. All rights reserved.
           </p>
           <p className="text-center sm:text-right">
             <span className="block sm:inline">Data Protection: </span>
             <Link
               href="mailto:blairiy.team@gmail.com"
-              className="underline hover:text-[color:var(--foreground)] transition-colors py-1 px-1 -mx-1 touch-manipulation"
+              className="underline hover:text-foreground transition-colors py-1 px-1 -mx-1 touch-manipulation"
             >
               blairify.team@gmail.com
             </Link>

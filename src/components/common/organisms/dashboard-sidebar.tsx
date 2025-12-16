@@ -6,7 +6,6 @@ import {
   Inbox,
   MessageSquare,
   Mic,
-  Settings,
   User,
   Users,
   X,
@@ -41,7 +40,7 @@ export default function DashboardSidebar({
         <div className="border-b border-border">
           <div className="px-4 h-16 flex items-center">
             <div className="flex items-center justify-between w-full">
-              <Logo variant="minimal" className="h-8" />
+              <Logo />
 
               <Button
                 variant="ghost"
@@ -179,7 +178,7 @@ export default function DashboardSidebar({
                   : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
               }`}
             >
-              <Settings className="h-5 w-5 flex-shrink-0" />
+              <Users className="h-5 w-5 flex-shrink-0" />
               <span
                 className={`truncate ${
                   isActive("/dashboard/admin/users")

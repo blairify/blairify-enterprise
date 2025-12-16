@@ -22,6 +22,8 @@ const aiPositionSummarySchema = z.object({
   companyProfile: z.string(),
   mode: z.string(),
   notes: z.string(),
+  duration: z.string().default(""),
+  stack: z.string().default(""),
 });
 
 export type AiPositionSummary = z.infer<typeof aiPositionSummarySchema>;
@@ -34,7 +36,7 @@ const jobListingQuestionsSchema = z.object({
 export type JobListingQuestions = z.infer<typeof jobListingQuestionsSchema>;
 
 function getMistralClient(): Mistral {
-  const apiKey = process.env.MISTRAL_API_KEY;
+  const apiKey = process.env.NEXT_PUBLIC_MISTRAL_API_KEY;
 
   if (!apiKey) {
     throw new Error("MISTRAL_API_KEY is not configured");
@@ -53,7 +55,7 @@ export async function aiChatRespond(
   const systemMessage: AiChatMessage = {
     role: "system",
     content:
-      "You are Blairify's interview builder assistant. Help an enterprise recruiter design a structured interview. Ask clarifying questions and keep answers concise and actionable.",
+      "You are Blairify's interview builder assistant. Help an enterprise recruiter design a structured interview. Your primary goal is to converge on: (1) position/role, (2) seniority level, (3) technical stack, (4) company profile, and (5) interview duration. Ask focused follow-up questions until each of these is clear. Keep answers concise and actionable.",
   };
 
   const response = await mistral.chat.complete({
@@ -91,7 +93,7 @@ export async function aiSummarizePosition(
     .map((message) => `${message.role.toUpperCase()}: ${message.content}`)
     .join("\n");
 
-  const prompt = `You are Blairify's interview builder assistant.\n\nBased on the conversation below between a recruiter and you, infer the key parameters needed to configure a technical interview.\n\nReturn ONLY a JSON object with this exact shape and no extra text: {\n  "position": string,\n  "seniority": string,\n  "companyProfile": string,\n  "mode": string,\n  "notes": string\n}.\n\nConversation:\n${transcript}`;
+  const prompt = `You are Blairify's interview builder assistant.\n\nBased on the conversation below between a recruiter and you, infer the key parameters needed to configure a technical interview.\n\nReturn ONLY a JSON object with this exact shape and no extra text: {\n  "position": string,\n  "seniority": string,\n  "companyProfile": string,\n  "mode": string,\n  "notes": string,\n  "duration": string,\n  "stack": string\n}.\n\nUse "unknown" for any field you cannot reliably infer.\n\nConversation:\n${transcript}`;
 
   const response = await mistral.chat.complete({
     model: "mistral-small-latest",
@@ -137,6 +139,8 @@ export async function aiSummarizePosition(
       companyProfile: "unknown",
       mode: "regular",
       notes: content || "No summary available.",
+      duration: "unknown",
+      stack: "unknown",
     };
   }
 }
