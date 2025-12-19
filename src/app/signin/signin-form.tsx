@@ -1,6 +1,8 @@
 "use client";
 
 import { useActionState } from "react";
+
+import { Typography } from "@/components/common/atoms/typography";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -51,9 +53,12 @@ export function SigninForm() {
           aria-describedby={emailError ? "signin-email-error" : undefined}
         />
         {emailError ? (
-          <p id="signin-email-error" className="text-sm text-destructive">
+          <Typography.Body
+            id="signin-email-error"
+            className="text-sm text-destructive"
+          >
             {emailError}
-          </p>
+          </Typography.Body>
         ) : null}
       </div>
 
@@ -68,20 +73,23 @@ export function SigninForm() {
           aria-describedby={passwordError ? "signin-password-error" : undefined}
         />
         {passwordError ? (
-          <p id="signin-password-error" className="text-sm text-destructive">
+          <Typography.Body
+            id="signin-password-error"
+            className="text-sm text-destructive"
+          >
             {passwordError}
-          </p>
+          </Typography.Body>
         ) : null}
       </div>
 
       {state.status === "error" && state.message ? (
-        <p
+        <Typography.Body
           id="signin-form-message"
           className="text-sm text-destructive"
           aria-live="polite"
         >
           {state.message}
-        </p>
+        </Typography.Body>
       ) : null}
 
       <Button type="submit" className="w-full" disabled={isPending}>

@@ -114,7 +114,7 @@ export function MarkdownEditor({
                 onClick={handleButtonClick({ prefix: "**", suffix: "**" })}
                 title="Bold"
               >
-                <Bold className="h-4 w-4" />
+                <Bold className="size-4" />
               </Button>
               <Button
                 type="button"
@@ -124,7 +124,7 @@ export function MarkdownEditor({
                 onClick={handleButtonClick({ prefix: "_", suffix: "_" })}
                 title="Italic"
               >
-                <Italic className="h-4 w-4" />
+                <Italic className="size-4" />
               </Button>
               <Button
                 type="button"
@@ -134,7 +134,7 @@ export function MarkdownEditor({
                 onClick={handleButtonClick({ prefix: "`", suffix: "`" })}
                 title="Inline Code"
               >
-                <Code className="h-4 w-4" />
+                <Code className="size-4" />
               </Button>
               <Button
                 type="button"
@@ -144,7 +144,7 @@ export function MarkdownEditor({
                 onClick={handleButtonClick({ prefix: "> " })}
                 title="Quote"
               >
-                <Quote className="h-4 w-4" />
+                <Quote className="size-4" />
               </Button>
               <Button
                 type="button"
@@ -154,7 +154,7 @@ export function MarkdownEditor({
                 onClick={handleButtonClick({ prefix: "- " })}
                 title="Bullet List"
               >
-                <List className="h-4 w-4" />
+                <List className="size-4" />
               </Button>
               <Button
                 type="button"
@@ -164,7 +164,7 @@ export function MarkdownEditor({
                 onClick={handleButtonClick({ prefix: "1. " })}
                 title="Numbered List"
               >
-                <ListOrdered className="h-4 w-4" />
+                <ListOrdered className="size-4" />
               </Button>
               <Button
                 type="button"

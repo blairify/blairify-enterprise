@@ -16,15 +16,6 @@ export function InterviewerAvatar({
   interviewer,
   size = 40,
 }: InterviewerAvatarProps) {
-  // Log to debug avatar rendering
-  console.log("🎨 Rendering avatar:", {
-    id: interviewer.id,
-    name: interviewer.name,
-    sex: interviewer.avatarConfig.sex,
-    hairStyle: interviewer.avatarConfig.hairStyle,
-    shirtColor: interviewer.avatarConfig.shirtColor,
-  });
-
   // Generate a deterministic config using the interviewer's ID as seed
   // This ensures the same interviewer always gets the same avatar
   const config = genConfig(interviewer.id);

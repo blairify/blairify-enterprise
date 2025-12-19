@@ -1,5 +1,6 @@
 "use client";
 
+import { Typography } from "@/components/common/atoms/typography";
 import { Badge } from "@/components/ui/badge";
 import {
   Table,
@@ -19,9 +20,9 @@ interface UserListTableProps {
 export function UserListTable({ users }: UserListTableProps) {
   if (users.length === 0) {
     return (
-      <p className="text-sm text-muted-foreground">
+      <Typography.Body className="text-sm text-muted-foreground">
         No users in this enterprise yet.
-      </p>
+      </Typography.Body>
     );
   }
 

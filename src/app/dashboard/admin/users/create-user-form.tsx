@@ -2,6 +2,7 @@
 
 import { useActionState } from "react";
 
+import { Typography } from "@/components/common/atoms/typography";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -68,12 +69,12 @@ export function CreateUserForm() {
             }
           />
           {fullNameError ? (
-            <p
+            <Typography.Body
               id="create-user-fullName-error"
               className="text-sm text-destructive"
             >
               {fullNameError}
-            </p>
+            </Typography.Body>
           ) : null}
         </div>
 
@@ -90,12 +91,12 @@ export function CreateUserForm() {
             }
           />
           {emailError ? (
-            <p
+            <Typography.Body
               id="create-user-email-error"
               className="text-sm text-destructive"
             >
               {emailError}
-            </p>
+            </Typography.Body>
           ) : null}
         </div>
 
@@ -112,12 +113,12 @@ export function CreateUserForm() {
             }
           />
           {passwordError ? (
-            <p
+            <Typography.Body
               id="create-user-password-error"
               className="text-sm text-destructive"
             >
               {passwordError}
-            </p>
+            </Typography.Body>
           ) : null}
         </div>
 
@@ -132,12 +133,12 @@ export function CreateUserForm() {
             }
           />
           {jobTitleError ? (
-            <p
+            <Typography.Body
               id="create-user-jobTitle-error"
               className="text-sm text-destructive"
             >
               {jobTitleError}
-            </p>
+            </Typography.Body>
           ) : null}
         </div>
 
@@ -161,31 +162,34 @@ export function CreateUserForm() {
             </SelectContent>
           </Select>
           {roleError ? (
-            <p id="create-user-role-error" className="text-sm text-destructive">
+            <Typography.Body
+              id="create-user-role-error"
+              className="text-sm text-destructive"
+            >
               {roleError}
-            </p>
+            </Typography.Body>
           ) : null}
         </div>
       </div>
 
       {isError ? (
-        <p
+        <Typography.Body
           id="create-user-form-message"
           className="text-sm text-destructive"
           aria-live="polite"
         >
           {state.message}
-        </p>
+        </Typography.Body>
       ) : null}
 
       {isSuccess ? (
-        <p
+        <Typography.Body
           id="create-user-form-message"
           className="text-sm text-emerald-600 dark:text-emerald-400"
           aria-live="polite"
         >
           {state.message}
-        </p>
+        </Typography.Body>
       ) : null}
 
       <Button type="submit" disabled={isPending} className="w-full">

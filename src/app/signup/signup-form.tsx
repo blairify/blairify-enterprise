@@ -1,6 +1,8 @@
 "use client";
 
 import { useActionState } from "react";
+
+import { Typography } from "@/components/common/atoms/typography";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -56,9 +58,12 @@ export function SignupForm() {
             aria-describedby={fullNameError ? "fullName-error" : undefined}
           />
           {fullNameError ? (
-            <p id="fullName-error" className="text-sm text-destructive">
+            <Typography.Body
+              id="fullName-error"
+              className="text-sm text-destructive"
+            >
               {fullNameError}
-            </p>
+            </Typography.Body>
           ) : null}
         </div>
 
@@ -73,9 +78,12 @@ export function SignupForm() {
             aria-describedby={emailError ? "email-error" : undefined}
           />
           {emailError ? (
-            <p id="email-error" className="text-sm text-destructive">
+            <Typography.Body
+              id="email-error"
+              className="text-sm text-destructive"
+            >
               {emailError}
-            </p>
+            </Typography.Body>
           ) : null}
         </div>
 
@@ -90,9 +98,12 @@ export function SignupForm() {
             aria-describedby={passwordError ? "password-error" : undefined}
           />
           {passwordError ? (
-            <p id="password-error" className="text-sm text-destructive">
+            <Typography.Body
+              id="password-error"
+              className="text-sm text-destructive"
+            >
               {passwordError}
-            </p>
+            </Typography.Body>
           ) : null}
         </div>
 
@@ -109,9 +120,12 @@ export function SignupForm() {
             }
           />
           {confirmPasswordError ? (
-            <p id="confirmPassword-error" className="text-sm text-destructive">
+            <Typography.Body
+              id="confirmPassword-error"
+              className="text-sm text-destructive"
+            >
               {confirmPasswordError}
-            </p>
+            </Typography.Body>
           ) : null}
         </div>
 
@@ -127,9 +141,12 @@ export function SignupForm() {
             }
           />
           {companyNameError ? (
-            <p id="companyName-error" className="text-sm text-destructive">
+            <Typography.Body
+              id="companyName-error"
+              className="text-sm text-destructive"
+            >
               {companyNameError}
-            </p>
+            </Typography.Body>
           ) : null}
         </div>
 
@@ -145,9 +162,12 @@ export function SignupForm() {
             }
           />
           {companyDomainError ? (
-            <p id="companyDomain-error" className="text-sm text-destructive">
+            <Typography.Body
+              id="companyDomain-error"
+              className="text-sm text-destructive"
+            >
               {companyDomainError}
-            </p>
+            </Typography.Body>
           ) : null}
         </div>
 
@@ -161,21 +181,24 @@ export function SignupForm() {
             aria-describedby={jobTitleError ? "jobTitle-error" : undefined}
           />
           {jobTitleError ? (
-            <p id="jobTitle-error" className="text-sm text-destructive">
+            <Typography.Body
+              id="jobTitle-error"
+              className="text-sm text-destructive"
+            >
               {jobTitleError}
-            </p>
+            </Typography.Body>
           ) : null}
         </div>
       </div>
 
       {state.status === "error" && state.message ? (
-        <p
+        <Typography.Body
           id="signup-form-message"
           className="text-sm text-destructive"
           aria-live="polite"
         >
           {state.message}
-        </p>
+        </Typography.Body>
       ) : null}
 
       <Button type="submit" className="w-full" disabled={isPending}>

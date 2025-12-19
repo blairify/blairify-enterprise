@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useActionState } from "react";
 
+import { Typography } from "@/components/common/atoms/typography";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -56,7 +57,7 @@ export function CreateCandidateForm() {
   const currentCompanyError = fieldError(state, "currentCompany");
   const linkedInUrlError = fieldError(state, "linkedInUrl");
   const githubUrlError = fieldError(state, "githubUrl");
-  const cvUrlError = fieldError(state, "cvUrl");
+  const _cvUrlError = fieldError(state, "cvUrl");
   const notesError = fieldError(state, "notes");
 
   const isError = state.status === "error" && state.message;
@@ -82,12 +83,12 @@ export function CreateCandidateForm() {
             }
           />
           {fullNameError ? (
-            <p
+            <Typography.Body
               id="create-candidate-full-name-error"
               className="text-sm text-destructive"
             >
               {fullNameError}
-            </p>
+            </Typography.Body>
           ) : null}
         </div>
 
@@ -103,12 +104,12 @@ export function CreateCandidateForm() {
             }
           />
           {emailError ? (
-            <p
+            <Typography.Body
               id="create-candidate-email-error"
               className="text-sm text-destructive"
             >
               {emailError}
-            </p>
+            </Typography.Body>
           ) : null}
         </div>
 
@@ -124,12 +125,12 @@ export function CreateCandidateForm() {
             }
           />
           {headlineError ? (
-            <p
+            <Typography.Body
               id="create-candidate-headline-error"
               className="text-sm text-destructive"
             >
               {headlineError}
-            </p>
+            </Typography.Body>
           ) : null}
         </div>
 
@@ -145,12 +146,12 @@ export function CreateCandidateForm() {
             placeholder="City, Country"
           />
           {locationError ? (
-            <p
+            <Typography.Body
               id="create-candidate-location-error"
               className="text-sm text-destructive"
             >
               {locationError}
-            </p>
+            </Typography.Body>
           ) : null}
         </div>
 
@@ -166,12 +167,12 @@ export function CreateCandidateForm() {
             placeholder="e.g. Senior, Lead"
           />
           {seniorityError ? (
-            <p
+            <Typography.Body
               id="create-candidate-seniority-error"
               className="text-sm text-destructive"
             >
               {seniorityError}
-            </p>
+            </Typography.Body>
           ) : null}
         </div>
 
@@ -188,12 +189,12 @@ export function CreateCandidateForm() {
             }
           />
           {currentCompanyError ? (
-            <p
+            <Typography.Body
               id="create-candidate-current-company-error"
               className="text-sm text-destructive"
             >
               {currentCompanyError}
-            </p>
+            </Typography.Body>
           ) : null}
         </div>
 
@@ -211,12 +212,12 @@ export function CreateCandidateForm() {
             placeholder="https://www.linkedin.com/in/..."
           />
           {linkedInUrlError ? (
-            <p
+            <Typography.Body
               id="create-candidate-linkedin-url-error"
               className="text-sm text-destructive"
             >
               {linkedInUrlError}
-            </p>
+            </Typography.Body>
           ) : null}
         </div>
 
@@ -232,33 +233,12 @@ export function CreateCandidateForm() {
             placeholder="https://github.com/..."
           />
           {githubUrlError ? (
-            <p
+            <Typography.Body
               id="create-candidate-github-url-error"
               className="text-sm text-destructive"
             >
               {githubUrlError}
-            </p>
-          ) : null}
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="cvUrl">CV URL (optional)</Label>
-          <Input
-            id="cvUrl"
-            name="cvUrl"
-            aria-invalid={!!cvUrlError}
-            aria-describedby={
-              cvUrlError ? "create-candidate-cv-url-error" : undefined
-            }
-            placeholder="https://example.com/cv.pdf"
-          />
-          {cvUrlError ? (
-            <p
-              id="create-candidate-cv-url-error"
-              className="text-sm text-destructive"
-            >
-              {cvUrlError}
-            </p>
+            </Typography.Body>
           ) : null}
         </div>
       </div>
@@ -275,33 +255,33 @@ export function CreateCandidateForm() {
           }
         />
         {notesError ? (
-          <p
+          <Typography.Body
             id="create-candidate-notes-error"
             className="text-sm text-destructive"
           >
             {notesError}
-          </p>
+          </Typography.Body>
         ) : null}
       </div>
 
       {isError ? (
-        <p
+        <Typography.Body
           id="create-candidate-form-message"
           className="text-sm text-destructive"
           aria-live="polite"
         >
           {state.message}
-        </p>
+        </Typography.Body>
       ) : null}
 
       {isSuccess ? (
-        <p
+        <Typography.Body
           id="create-candidate-form-message"
           className="text-sm text-emerald-600 dark:text-emerald-400"
           aria-live="polite"
         >
           {state.message}
-        </p>
+        </Typography.Body>
       ) : null}
 
       <Button type="submit" disabled={isPending} className="w-full">

@@ -3,6 +3,7 @@
 import {
   Database,
   GitBranch,
+  Globe,
   Inbox,
   MessageSquare,
   Mic,
@@ -13,6 +14,7 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Logo from "@/components/common/atoms/logo-blairify";
+import { Typography } from "@/components/common/atoms/typography";
 import { Button } from "@/components/ui/button";
 
 interface DashboardSidebarProps {
@@ -31,6 +33,8 @@ export default function DashboardSidebar({
   const isActive = (path: string) => {
     return pathname === path;
   };
+  const isPublicInterviews =
+    pathname?.startsWith("/dashboard/public-interviews") ?? false;
 
   return (
     <>
@@ -48,7 +52,7 @@ export default function DashboardSidebar({
                 className="lg:hidden text-sidebar-foreground active:bg-sidebar-accent md:hover:bg-sidebar-accent transition-colors"
                 onClick={() => setSidebarOpen(false)}
               >
-                <X className="h-4 w-4" />
+                <X className="size-4" />
               </Button>
             </div>
           </div>
@@ -63,13 +67,31 @@ export default function DashboardSidebar({
                 : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
             }`}
           >
-            <MessageSquare className="h-5 w-5 flex-shrink-0" />
+            <MessageSquare className="size-5 flex-shrink-0" />
             <span
               className={`truncate ${
                 isActive("/build-interview") ? "font-semibold" : "font-medium"
               }`}
             >
               Build interview
+            </span>
+          </Link>
+
+          <Link
+            href="/dashboard/public-interviews"
+            className={`flex items-center space-x-3 px-3 py-2 rounded-md transition-colors w-full ${
+              isPublicInterviews
+                ? "bg-sidebar-primary text-sidebar-primary-foreground"
+                : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+            }`}
+          >
+            <Globe className="size-5 flex-shrink-0" />
+            <span
+              className={`truncate ${
+                isPublicInterviews ? "font-semibold" : "font-medium"
+              }`}
+            >
+              Public interviews
             </span>
           </Link>
 
@@ -81,7 +103,7 @@ export default function DashboardSidebar({
                 : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
             }`}
           >
-            <User className="h-5 w-5 flex-shrink-0" />
+            <User className="size-5 flex-shrink-0" />
             <span
               className={`truncate ${
                 isActive("/candidates") ? "font-semibold" : "font-medium"
@@ -91,21 +113,6 @@ export default function DashboardSidebar({
             </span>
           </Link>
 
-          <button
-            type="button"
-            className="flex items-center space-x-3 px-3 py-2 rounded-md w-full text-sidebar-foreground/60 cursor-not-allowed"
-            disabled
-            aria-disabled="true"
-          >
-            <GitBranch className="h-5 w-5 flex-shrink-0 opacity-60" />
-            <span className="flex items-center gap-2 truncate font-medium">
-              <span>My flows</span>
-              <span className="text-[10px] uppercase tracking-wide px-1.5 py-0.5 rounded-full border border-sidebar-border/60">
-                Soon
-              </span>
-            </span>
-          </button>
-
           <Link
             href="/organisations"
             className={`flex items-center space-x-3 px-3 py-2 rounded-md transition-colors w-full ${
@@ -114,7 +121,7 @@ export default function DashboardSidebar({
                 : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
             }`}
           >
-            <Users className="h-5 w-5 flex-shrink-0" />
+            <Users className="size-5 flex-shrink-0" />
             <span
               className={`truncate ${
                 isActive("/organisations") ? "font-semibold" : "font-medium"
@@ -124,13 +131,50 @@ export default function DashboardSidebar({
             </span>
           </Link>
 
+          {userAdmin ? (
+            <Link
+              href="/dashboard/admin/users"
+              className={`flex items-center space-x-3 px-3 py-2 rounded-md transition-colors w-full ${
+                isActive("/dashboard/admin/users")
+                  ? "bg-sidebar-primary text-sidebar-primary-foreground"
+                  : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+              }`}
+            >
+              <Users className="size-5 flex-shrink-0" />
+              <span
+                className={`truncate ${
+                  isActive("/dashboard/admin/users")
+                    ? "font-semibold"
+                    : "font-medium"
+                }`}
+              >
+                Manage Users
+              </span>
+            </Link>
+          ) : null}
+
           <button
             type="button"
             className="flex items-center space-x-3 px-3 py-2 rounded-md w-full text-sidebar-foreground/60 cursor-not-allowed"
             disabled
             aria-disabled="true"
           >
-            <Inbox className="h-5 w-5 flex-shrink-0 opacity-60" />
+            <GitBranch className="size-5 flex-shrink-0 opacity-60" />
+            <span className="flex items-center gap-2 truncate font-medium">
+              <span>My flows</span>
+              <span className="text-[10px] uppercase tracking-wide px-1.5 py-0.5 rounded-full border border-sidebar-border/60">
+                Soon
+              </span>
+            </span>
+          </button>
+
+          <button
+            type="button"
+            className="flex items-center space-x-3 px-3 py-2 rounded-md w-full text-sidebar-foreground/60 cursor-not-allowed"
+            disabled
+            aria-disabled="true"
+          >
+            <Inbox className="size-5 flex-shrink-0 opacity-60" />
             <span className="flex items-center gap-2 truncate font-medium">
               <span>Requests</span>
               <span className="text-[10px] uppercase tracking-wide px-1.5 py-0.5 rounded-full border border-sidebar-border/60">
@@ -145,7 +189,7 @@ export default function DashboardSidebar({
             disabled
             aria-disabled="true"
           >
-            <Mic className="h-5 w-5 flex-shrink-0 opacity-60" />
+            <Mic className="size-5 flex-shrink-0 opacity-60" />
             <span className="flex items-center gap-2 truncate font-medium">
               <span>Chat</span>
               <span className="text-[10px] uppercase tracking-wide px-1.5 py-0.5 rounded-full border border-sidebar-border/60">
@@ -160,7 +204,7 @@ export default function DashboardSidebar({
             disabled
             aria-disabled="true"
           >
-            <Database className="h-5 w-5 flex-shrink-0 opacity-60" />
+            <Database className="size-5 flex-shrink-0 opacity-60" />
             <span className="flex items-center gap-2 truncate font-medium">
               <span>Storage</span>
               <span className="text-[10px] uppercase tracking-wide px-1.5 py-0.5 rounded-full border border-sidebar-border/60">
@@ -168,35 +212,13 @@ export default function DashboardSidebar({
               </span>
             </span>
           </button>
-
-          {userAdmin ? (
-            <Link
-              href="/dashboard/admin/users"
-              className={`flex items-center space-x-3 px-3 py-2 rounded-md transition-colors w-full ${
-                isActive("/dashboard/admin/users")
-                  ? "bg-sidebar-primary text-sidebar-primary-foreground"
-                  : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-              }`}
-            >
-              <Users className="h-5 w-5 flex-shrink-0" />
-              <span
-                className={`truncate ${
-                  isActive("/dashboard/admin/users")
-                    ? "font-semibold"
-                    : "font-medium"
-                }`}
-              >
-                Manage
-              </span>
-            </Link>
-          ) : null}
         </nav>
 
         {/* Footer - Sticky at bottom */}
         <div className="mt-auto p-4 border-t border-sidebar-border">
-          <p className="text-xs text-sidebar-foreground/60 text-center">
+          <Typography.SubCaption className="text-xs text-sidebar-foreground/60 text-center">
             &copy; Rights Reserved Blairify
-          </p>
+          </Typography.SubCaption>
         </div>
       </div>
 

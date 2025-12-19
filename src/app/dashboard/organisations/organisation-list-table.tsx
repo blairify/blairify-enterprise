@@ -2,6 +2,7 @@
 
 import { useMemo, useState, useTransition } from "react";
 
+import { Typography } from "@/components/common/atoms/typography";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -162,9 +163,9 @@ export function OrganisationListTable({
 
   if (organisations.length === 0) {
     return (
-      <p className="text-sm text-muted-foreground">
+      <Typography.Body className="text-sm text-muted-foreground">
         No organisations created for this enterprise yet.
-      </p>
+      </Typography.Body>
     );
   }
 

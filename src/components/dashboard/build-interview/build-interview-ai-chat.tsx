@@ -59,15 +59,19 @@ export function BuildInterviewAiChat({ onSummary }: BuildInterviewAiChatProps) {
   const [isAsideVisible, setIsAsideVisible] = useState(true);
   const [phase, setPhase] = useState<BuildInterviewPhase>("landing");
 
-  async function updateSummary(currentMessages: AiChatMessage[]) {
+  async function updateSummary(
+    currentMessages: AiChatMessage[],
+  ): Promise<AiPositionSummary | null> {
     setError(null);
     setIsSummarizing(true);
 
     try {
       const result = await aiSummarizePosition(currentMessages);
       setSummary(result);
+      return result;
     } catch {
       setError("Unable to summarize position right now. Please try again.");
+      return null;
     } finally {
       setIsSummarizing(false);
     }
@@ -257,10 +261,14 @@ export function BuildInterviewAiChat({ onSummary }: BuildInterviewAiChatProps) {
 
     return (
       <div className="space-y-3 rounded-md border bg-muted/40 p-3">
-        <p className="text-xs font-medium text-muted-foreground">Quick picks</p>
+        <Typography.SubCaptionMedium className="block text-muted-foreground">
+          Quick picks
+        </Typography.SubCaptionMedium>
         {showPosition ? (
           <div className="space-y-1">
-            <p className="text-xs text-muted-foreground">Role</p>
+            <Typography.SubCaption className="block text-muted-foreground">
+              Role
+            </Typography.SubCaption>
             <div className="flex flex-wrap gap-2">
               {POSITIONS.map((item) => {
                 const isSelected = quickPickSelections.position === item.value;
@@ -286,7 +294,9 @@ export function BuildInterviewAiChat({ onSummary }: BuildInterviewAiChatProps) {
         ) : null}
         {showSeniority ? (
           <div className="space-y-1">
-            <p className="text-xs text-muted-foreground">Seniority</p>
+            <Typography.SubCaption className="block text-muted-foreground">
+              Seniority
+            </Typography.SubCaption>
             <div className="flex flex-wrap gap-2">
               {SENIORITY_LEVELS.map((item) => {
                 const isSelected = quickPickSelections.seniority === item.value;
@@ -312,7 +322,9 @@ export function BuildInterviewAiChat({ onSummary }: BuildInterviewAiChatProps) {
         ) : null}
         {showCompanyProfile ? (
           <div className="space-y-1">
-            <p className="text-xs text-muted-foreground">Company profile</p>
+            <Typography.SubCaption className="block text-muted-foreground">
+              Company profile
+            </Typography.SubCaption>
             <div className="flex flex-wrap gap-2">
               {COMPANY_PROFILES.map((item) => {
                 const isSelected =
@@ -343,7 +355,9 @@ export function BuildInterviewAiChat({ onSummary }: BuildInterviewAiChatProps) {
         ) : null}
         {showDuration ? (
           <div className="space-y-1">
-            <p className="text-xs text-muted-foreground">Duration</p>
+            <Typography.SubCaption className="block text-muted-foreground">
+              Duration
+            </Typography.SubCaption>
             <div className="flex flex-wrap gap-2">
               {INTERVIEW_DURATIONS.map((item) => {
                 const isSelected = quickPickSelections.duration === item.value;
@@ -470,7 +484,7 @@ export function BuildInterviewAiChat({ onSummary }: BuildInterviewAiChatProps) {
                   onKeyDown={handleTextareaKeyDown}
                   placeholder="Begin with a brief description of the role and requirements..."
                   rows={3}
-                  className="flex-1 resize-none border-none bg-transparent pr-28 text-base focus-visible:ring-0"
+                  className="flex-1 resize-none border-none !bg-transparent pr-28 text-base focus-visible:ring-0"
                   autoFocus
                 />
                 <Button
@@ -478,7 +492,7 @@ export function BuildInterviewAiChat({ onSummary }: BuildInterviewAiChatProps) {
                   disabled={isSending || !input.trim()}
                   className="absolute right-3 inline-flex h-10 items-center gap-2 rounded-full px-4 text-sm font-semibold"
                 >
-                  <ArrowUp className="h-4 w-4" />
+                  <ArrowUp className="size-4" />
                   <span>Build now</span>
                 </Button>
               </div>
@@ -492,11 +506,13 @@ export function BuildInterviewAiChat({ onSummary }: BuildInterviewAiChatProps) {
         <section className="flex min-h-[60vh] items-center justify-center">
           <div className="w-full max-w-xl space-y-4">
             <div className="space-y-1 text-center">
-              <p className="text-sm font-medium">Describe your interview</p>
-              <p className="text-xs text-muted-foreground">
+              <Typography.CaptionMedium className="block">
+                Describe your interview
+              </Typography.CaptionMedium>
+              <Typography.SubCaption className="block text-muted-foreground">
                 Share the role, seniority, tech stack, company type, and what
                 you want to assess.
-              </p>
+              </Typography.SubCaption>
             </div>
             <form onSubmit={handleSend} className="space-y-2">
               <label className="sr-only" htmlFor="ai-message-initial">
@@ -518,7 +534,7 @@ export function BuildInterviewAiChat({ onSummary }: BuildInterviewAiChatProps) {
                   disabled={isSending || !input.trim()}
                   className="absolute bottom-2.5 right-2.5 inline-flex h-9 items-center gap-1 rounded-full px-3 text-xs font-medium"
                 >
-                  <ArrowUp className="h-4 w-4" />
+                  <ArrowUp className="size-4" />
                   <span>Build now</span>
                 </Button>
               </div>
@@ -567,9 +583,9 @@ export function BuildInterviewAiChat({ onSummary }: BuildInterviewAiChatProps) {
                         />
                       ) : null}
                       <div className="space-y-1">
-                        <p className="text-xs font-medium text-muted-foreground">
+                        <Typography.SubCaptionMedium className="block text-muted-foreground">
                           {isUser ? "You" : `${interviewer.name} · Blairify AI`}
-                        </p>
+                        </Typography.SubCaptionMedium>
                         <div
                           className={
                             isUser
@@ -590,9 +606,9 @@ export function BuildInterviewAiChat({ onSummary }: BuildInterviewAiChatProps) {
               <div className="mt-2 flex items-center gap-2 text-xs text-muted-foreground">
                 <span>{interviewer.name} is thinking</span>
                 <div className="flex gap-1" aria-hidden="true">
-                  <span className="h-1.5 w-1.5 rounded-full bg-muted-foreground/70 animate-bounce" />
-                  <span className="h-1.5 w-1.5 rounded-full bg-muted-foreground/70 animate-bounce delay-100" />
-                  <span className="h-1.5 w-1.5 rounded-full bg-muted-foreground/70 animate-bounce delay-200" />
+                  <span className="size-1.5 rounded-full bg-muted-foreground/70 animate-bounce" />
+                  <span className="size-1.5 rounded-full bg-muted-foreground/70 animate-bounce delay-100" />
+                  <span className="size-1.5 rounded-full bg-muted-foreground/70 animate-bounce delay-200" />
                 </div>
               </div>
             )}
@@ -609,15 +625,14 @@ export function BuildInterviewAiChat({ onSummary }: BuildInterviewAiChatProps) {
                   onKeyDown={handleTextareaKeyDown}
                   placeholder="Describe what you want this interview to cover..."
                   rows={3}
-                  className="pr-12 resize-none"
+                  className="pr-12 resize-none !bg-transparent focus-visible:ring-0"
                 />
                 <Button
                   type="submit"
                   disabled={isSending || !input.trim()}
-                  className="absolute bottom-2.5 right-2.5 inline-flex h-9 items-center gap-1 rounded-full px-3 text-xs font-medium"
+                  className="absolute bottom-2.5 right-2.5 inline-flex rounded-full"
                 >
-                  <ArrowUp className="h-4 w-4" />
-                  <span>Build now</span>
+                  <ArrowUp className="size-4" />
                 </Button>
               </div>
             </form>
@@ -643,9 +658,9 @@ export function BuildInterviewAiChat({ onSummary }: BuildInterviewAiChatProps) {
             aria-label="Interview data drawer"
           >
             <div className="flex items-center justify-between gap-2 border-b border-border px-4 py-3 md:hidden">
-              <p className="text-sm font-medium text-foreground">
+              <Typography.CaptionMedium className="text-foreground">
                 Interview data
-              </p>
+              </Typography.CaptionMedium>
               <Button
                 type="button"
                 variant="ghost"
@@ -660,11 +675,15 @@ export function BuildInterviewAiChat({ onSummary }: BuildInterviewAiChatProps) {
               {renderSuggestions()}
 
               {error ? (
-                <p className="text-xs text-destructive">{error}</p>
+                <Typography.SubCaption className="block text-destructive">
+                  {error}
+                </Typography.SubCaption>
               ) : null}
 
               <div className="space-y-2 rounded-md border bg-muted/40 p-3 text-sm">
-                <p className="font-medium">Interview data</p>
+                <Typography.CaptionMedium className="block">
+                  Interview data
+                </Typography.CaptionMedium>
                 {summary ? (
                   <>
                     <div className="flex flex-wrap items-center justify-between gap-2 text-[11px]">
@@ -732,23 +751,25 @@ export function BuildInterviewAiChat({ onSummary }: BuildInterviewAiChatProps) {
                         </dl>
                         {notesDone ? (
                           <div className="mt-2 space-y-1">
-                            <p className="text-muted-foreground">Notes</p>
-                            <p className="text-xs whitespace-pre-line">
+                            <Typography.Caption className="block text-muted-foreground">
+                              Notes
+                            </Typography.Caption>
+                            <Typography.SubCaption className="block whitespace-pre-line text-foreground">
                               {summary.notes}
-                            </p>
+                            </Typography.SubCaption>
                           </div>
                         ) : null}
                       </>
                     ) : (
-                      <p className="mt-2 text-xs text-muted-foreground">
+                      <Typography.SubCaption className="mt-2 block text-muted-foreground">
                         Keep chatting to extract the key interview parameters.
-                      </p>
+                      </Typography.SubCaption>
                     )}
                   </>
                 ) : (
-                  <p className="text-xs text-muted-foreground">
+                  <Typography.SubCaption className="block text-muted-foreground">
                     Keep chatting to extract the key interview parameters.
-                  </p>
+                  </Typography.SubCaption>
                 )}
                 <div className="mt-3 flex items-center justify-between gap-2 text-[11px]">
                   <Button
@@ -756,14 +777,17 @@ export function BuildInterviewAiChat({ onSummary }: BuildInterviewAiChatProps) {
                     size="sm"
                     className="h-7 px-2 text-[11px]"
                     disabled={!canSummarize}
-                    onClick={() => {
-                      if (!canSummarize || !summary) {
+                    onClick={async () => {
+                      if (!canSummarize) {
                         return;
                       }
 
-                      if (onSummary) {
-                        onSummary(summary);
+                      const next = await updateSummary(messages);
+
+                      if (!next || !onSummary) {
+                        return;
                       }
+                      onSummary(next);
                     }}
                   >
                     Summarize

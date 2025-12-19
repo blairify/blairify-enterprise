@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 
+import { Typography } from "@/components/common/atoms/typography";
 import { Button } from "@/components/ui/button";
 import { BuildInterviewTypeOption } from "./build-interview-type-option";
 import {
@@ -139,7 +140,7 @@ export function BuildInterviewScratchStepper() {
           return (
             <li key={item.id} className="flex items-center gap-2">
               <span
-                className={`flex h-6 w-6 items-center justify-center rounded-full border ${isActive ? "border-primary bg-primary text-primary-foreground" : isCompleted ? "border-primary bg-primary/10 text-primary" : "border-border bg-background text-muted-foreground"}`}
+                className={`flex size-6 items-center justify-center rounded-full border ${isActive ? "border-primary bg-primary text-primary-foreground" : isCompleted ? "border-primary bg-primary/10 text-primary" : "border-border bg-background text-muted-foreground"}`}
                 aria-current={isActive ? "step" : undefined}
               >
                 {index + 1}
@@ -162,9 +163,9 @@ export function BuildInterviewScratchStepper() {
   function renderPositionStep() {
     return (
       <div className="space-y-3">
-        <p className="text-sm text-muted-foreground">
+        <Typography.Body className="text-sm text-muted-foreground">
           What kind of role is this interview for?
-        </p>
+        </Typography.Body>
         <div className="flex flex-row flex-wrap gap-3">
           {POSITIONS.map((position) => (
             <BuildInterviewTypeOption
@@ -187,9 +188,9 @@ export function BuildInterviewScratchStepper() {
   function renderExperienceStep() {
     return (
       <div className="space-y-3">
-        <p className="text-sm text-muted-foreground">
+        <Typography.Body className="text-sm text-muted-foreground">
           What seniority level should this interview target?
-        </p>
+        </Typography.Body>
         <div className="grid gap-3 sm:grid-cols-2">
           {SENIORITY_LEVELS.map((level) => (
             <BuildInterviewTypeOption
@@ -212,9 +213,9 @@ export function BuildInterviewScratchStepper() {
   function renderCompanyStep() {
     return (
       <div className="space-y-3">
-        <p className="text-sm text-muted-foreground">
+        <Typography.Body className="text-sm text-muted-foreground">
           What kind of company is this interview for?
-        </p>
+        </Typography.Body>
         <div className="grid gap-3 sm:grid-cols-2">
           {COMPANY_PROFILES.map((profile) => (
             <BuildInterviewTypeOption
@@ -237,9 +238,9 @@ export function BuildInterviewScratchStepper() {
   function renderDurationStep() {
     return (
       <div className="space-y-3">
-        <p className="text-sm text-muted-foreground">
+        <Typography.Body className="text-sm text-muted-foreground">
           How long should this interview take?
-        </p>
+        </Typography.Body>
         <div className="grid gap-3 sm:grid-cols-2">
           {INTERVIEW_DURATIONS.map((duration) => (
             <BuildInterviewTypeOption
@@ -278,17 +279,19 @@ export function BuildInterviewScratchStepper() {
   return (
     <section className="space-y-4 border-t pt-4">
       <header className="space-y-2">
-        <h2 className="text-base font-semibold">Configure interview</h2>
-        <p className="text-sm text-muted-foreground">
+        <Typography.Heading2 className="text-base font-semibold">
+          Configure interview
+        </Typography.Heading2>
+        <Typography.Body className="text-sm text-muted-foreground">
           Answer a few quick questions so Blairify can build the right
           interview.
-        </p>
+        </Typography.Body>
         {renderStepIndicator()}
       </header>
 
       {renderCurrentStep()}
 
-      <div className="flex items-center justify-between pt-2">
+      <div className="flex flex-wrap items-center justify-between gap-2 pt-2">
         <Button
           type="button"
           variant="ghost"

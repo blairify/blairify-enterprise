@@ -1,6 +1,9 @@
+import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
-
+import Logo from "@/components/common/atoms/logo-blairify";
+import { Typography } from "@/components/common/atoms/typography";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -28,7 +31,7 @@ export function AuthShell({
         return {
           prompt: "Don't have an account?",
           label: "Sign up",
-          href: "/auth/signup",
+          href: "/auth/signup?pin=300820",
         } as const;
       case "signup":
         return {
@@ -44,55 +47,85 @@ export function AuthShell({
   })();
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center px-4 py-10">
-      <div className="w-full max-w-6xl grid gap-10 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)] items-center">
-        <section className="space-y-8">
-          <div className="inline-flex items-center rounded-full border border-border/60 bg-background/60 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
-            {mode === "signin" ? "Enterprise access" : "Get started in minutes"}
-          </div>
+    <div className="min-h-screen bg-background flex flex-col items-center justify-center p-3">
+      <div className="w-full max-w-5xl">
+        <Card className="md:hidden w-full rounded-3xl border border-border/60 bg-card/95 shadow-2xl backdrop-blur py-4 gap-4">
+          <CardHeader className="space-y-3 px-4">
+            <div className="flex items-center justify-between">
+              <Button
+                asChild
+                variant="ghost"
+                size="sm"
+                className="gap-1 text-xs bg-background/60 border border-border/60 text-muted-foreground hover:text-foreground hover:bg-background/80 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              >
+                <Link href="/">
+                  <span aria-hidden="true">←</span> Back to home
+                </Link>
+              </Button>
+              <Logo variant="iconOnly" className="opacity-80" iconSize={18} />
+            </div>
 
-          <div className="space-y-4">
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-foreground">
-              {title}
-            </h1>
-            <p className="text-base sm:text-lg text-muted-foreground max-w-xl">
-              {description}
-            </p>
-          </div>
-
-          <ul className="space-y-3 text-sm sm:text-base text-muted-foreground max-w-xl">
-            <li className="flex gap-3">
-              <span className="mt-2 h-1.5 w-1.5 rounded-full bg-primary" />
-              <span>Multi-tenant, enterprise-ready interview workflows.</span>
-            </li>
-            <li className="flex gap-3">
-              <span className="mt-2 h-1.5 w-1.5 rounded-full bg-primary/80" />
-              <span>Granular access control for your hiring team.</span>
-            </li>
-            <li className="flex gap-3">
-              <span className="mt-2 h-1.5 w-1.5 rounded-full bg-primary/70" />
-              <span>
-                Audit-ready activity tracking across candidates and flows.
-              </span>
-            </li>
-          </ul>
-        </section>
-
-        <section className="w-full max-w-md justify-self-center">
-          <Card className="border-border bg-card/95 shadow-2xl backdrop-blur">
-            <CardHeader className="space-y-2 text-left">
-              <CardTitle className="text-xl sm:text-2xl font-semibold tracking-tight">
-                {mode === "signin" ? "Sign in" : "Create account"}
-              </CardTitle>
-              <CardDescription className="text-sm text-muted-foreground">
-                {mode === "signin"
-                  ? "Use your work email to access your Blairify Enterprise workspace."
-                  : "Set up your first admin and enterprise workspace in a few steps."}
+            <div className="text-center">
+              <CardTitle className="text-xl">{title}</CardTitle>
+              <CardDescription className="text-sm">
+                {description}
               </CardDescription>
-            </CardHeader>
-            <CardContent className="pt-2 pb-6">
+            </div>
+          </CardHeader>
+
+          <CardContent className="px-4">
+            <div className="space-y-6">{children}</div>
+            <Typography.Body className="mt-6 text-center text-sm text-muted-foreground">
+              <span className="mr-1">{opposite.prompt}</span>
+              <Link
+                href={opposite.href}
+                className="text-primary hover:underline focus-visible:underline focus-visible:outline-none"
+              >
+                {opposite.label}
+              </Link>
+            </Typography.Body>
+          </CardContent>
+        </Card>
+
+        <div className="hidden md:grid w-full grid-cols-2 rounded-3xl overflow-hidden border border-border/60 shadow-2xl">
+          <div className="flex flex-col items-center justify-center bg-[hsl(var(--blairify-bg-200))] text-foreground relative min-h-[32rem]">
+            <div className="relative w-56 h-56">
+              <Image
+                src="/icon0.svg"
+                alt="Blairify logo"
+                fill
+                priority
+                className="object-contain drop-shadow-2xl"
+              />
+            </div>
+          </div>
+
+          <div className="w-full bg-card p-6 sm:p-10 flex flex-col justify-center min-h-[32rem]">
+            <div className="flex justify-end mb-4">
+              <Button
+                asChild
+                variant="ghost"
+                size="sm"
+                className="gap-2 text-xs border border-border/60 text-muted-foreground hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              >
+                <Link href="/">
+                  <span aria-hidden="true">←</span> Back to home
+                </Link>
+              </Button>
+            </div>
+
+            <div className="text-center">
+              <Typography.Heading1 className="text-2xl font-semibold text-foreground">
+                {title}
+              </Typography.Heading1>
+              <Typography.Body className="text-sm text-muted-foreground">
+                {description}
+              </Typography.Body>
+            </div>
+
+            <div className="mt-6 flex-1 flex flex-col">
               <div className="space-y-6">{children}</div>
-              <p className="mt-6 text-center text-sm text-muted-foreground">
+              <Typography.Body className="mt-6 text-center text-sm text-muted-foreground">
                 <span className="mr-1">{opposite.prompt}</span>
                 <Link
                   href={opposite.href}
@@ -100,10 +133,10 @@ export function AuthShell({
                 >
                   {opposite.label}
                 </Link>
-              </p>
-            </CardContent>
-          </Card>
-        </section>
+              </Typography.Body>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

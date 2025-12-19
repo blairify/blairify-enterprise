@@ -2,6 +2,7 @@
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
+import { Typography } from "@/components/common/atoms/typography";
 import { Button } from "@/components/ui/button";
 import {
   Tooltip,
@@ -56,7 +57,9 @@ export function ThemeToggle() {
           </Button>
         </TooltipTrigger>
         <TooltipContent>
-          <p>{getTooltipText()}</p>
+          <Typography.Body className="text-sm">
+            {getTooltipText()}
+          </Typography.Body>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>

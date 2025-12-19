@@ -1,4 +1,5 @@
 import Logo from "@/components/common/atoms/logo-blairify";
+import { Typography } from "@/components/common/atoms/typography";
 
 interface LoadingPageProps {
   message?: string;
@@ -11,7 +12,9 @@ export default function LoadingPage({
     <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4">
       <div className="text-center animate-pulse space-y-4">
         <Logo variant="iconOnly" />
-        <p className="text-muted-foreground">{message}</p>
+        <Typography.Body className="text-muted-foreground">
+          {message}
+        </Typography.Body>
       </div>
     </div>
   );

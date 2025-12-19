@@ -3,6 +3,7 @@
 import { useState } from "react";
 import type { JobListingQuestions } from "@/app/dashboard/build-interview/actions";
 import { aiGenerateQuestionsFromJobListing } from "@/app/dashboard/build-interview/actions";
+import { Typography } from "@/components/common/atoms/typography";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -56,17 +57,27 @@ export function BuildInterviewJobListingChat() {
             />
           </div>
           <div className="flex items-center justify-end">
-            <Button type="submit" disabled={isGenerating || !jobListing.trim()}>
+            <Button
+              type="submit"
+              disabled={isGenerating || !jobListing.trim()}
+              className="w-full sm:w-auto"
+            >
               {isGenerating ? "Generating questions..." : "Generate questions"}
             </Button>
           </div>
         </form>
 
-        {error ? <p className="text-xs text-destructive">{error}</p> : null}
+        {error ? (
+          <Typography.SubCaption className="block text-destructive">
+            {error}
+          </Typography.SubCaption>
+        ) : null}
 
         {result ? (
           <div className="space-y-2 border-t pt-3 text-sm">
-            <p className="font-medium">Suggested interview questions</p>
+            <Typography.CaptionMedium className="block">
+              Suggested interview questions
+            </Typography.CaptionMedium>
             <ol className="list-decimal space-y-1 pl-4 text-xs">
               {result.questions.map((question: string, index: number) => (
                 <li key={index}>{question}</li>
@@ -74,8 +85,12 @@ export function BuildInterviewJobListingChat() {
             </ol>
             {result.notes ? (
               <div className="space-y-1 pt-2">
-                <p className="text-muted-foreground">Notes</p>
-                <p className="text-xs whitespace-pre-line">{result.notes}</p>
+                <Typography.SubCaption className="block text-muted-foreground">
+                  Notes
+                </Typography.SubCaption>
+                <Typography.SubCaption className="block whitespace-pre-line text-foreground">
+                  {result.notes}
+                </Typography.SubCaption>
               </div>
             ) : null}
           </div>

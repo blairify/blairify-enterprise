@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useActionState, useEffect, useState } from "react";
 
+import { Typography } from "@/components/common/atoms/typography";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -189,12 +190,12 @@ export function CreateOrganisationForm() {
             }
           />
           {nameError ? (
-            <p
+            <Typography.Body
               id="create-organisation-name-error"
               className="text-sm text-destructive"
             >
               {nameError}
-            </p>
+            </Typography.Body>
           ) : null}
         </div>
 
@@ -212,12 +213,12 @@ export function CreateOrganisationForm() {
             }
           />
           {descriptionError ? (
-            <p
+            <Typography.Body
               id="create-organisation-description-error"
               className="text-sm text-destructive"
             >
               {descriptionError}
-            </p>
+            </Typography.Body>
           ) : null}
         </div>
 
@@ -250,12 +251,12 @@ export function CreateOrganisationForm() {
             </Select>
             <Input type="hidden" name="industry" value={industryValue} />
             {industryError ? (
-              <p
+              <Typography.Body
                 id="create-organisation-industry-error"
                 className="text-sm text-destructive"
               >
                 {industryError}
-              </p>
+              </Typography.Body>
             ) : null}
           </div>
 
@@ -296,12 +297,12 @@ export function CreateOrganisationForm() {
             </Select>
             <Input type="hidden" name="location" value={locationValue} />
             {locationError ? (
-              <p
+              <Typography.Body
                 id="create-organisation-location-error"
                 className="text-sm text-destructive"
               >
                 {locationError}
-              </p>
+              </Typography.Body>
             ) : null}
           </div>
         </div>
@@ -333,12 +334,12 @@ export function CreateOrganisationForm() {
             </Select>
             <Input type="hidden" name="size" value={sizeValue} />
             {sizeError ? (
-              <p
+              <Typography.Body
                 id="create-organisation-size-error"
                 className="text-sm text-destructive"
               >
                 {sizeError}
-              </p>
+              </Typography.Body>
             ) : null}
           </div>
 
@@ -354,12 +355,12 @@ export function CreateOrganisationForm() {
               placeholder="https://example.com"
             />
             {websiteError ? (
-              <p
+              <Typography.Body
                 id="create-organisation-website-error"
                 className="text-sm text-destructive"
               >
                 {websiteError}
-              </p>
+              </Typography.Body>
             ) : null}
           </div>
         </div>
@@ -378,34 +379,34 @@ export function CreateOrganisationForm() {
             placeholder="e.g. Engineering & Product"
           />
           {hiringFocusError ? (
-            <p
+            <Typography.Body
               id="create-organisation-hiring-focus-error"
               className="text-sm text-destructive"
             >
               {hiringFocusError}
-            </p>
+            </Typography.Body>
           ) : null}
         </div>
       </div>
 
       {isError ? (
-        <p
+        <Typography.Body
           id="create-organisation-form-message"
           className="text-sm text-destructive"
           aria-live="polite"
         >
           {state.message}
-        </p>
+        </Typography.Body>
       ) : null}
 
       {isSuccess ? (
-        <p
+        <Typography.Body
           id="create-organisation-form-message"
           className="text-sm text-emerald-600 dark:text-emerald-400"
           aria-live="polite"
         >
           {state.message}
-        </p>
+        </Typography.Body>
       ) : null}
 
       <Button type="submit" disabled={isPending} className="w-full">

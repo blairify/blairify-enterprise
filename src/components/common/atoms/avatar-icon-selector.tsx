@@ -18,6 +18,7 @@ import {
   Trophy,
   User,
 } from "lucide-react";
+import { Typography } from "@/components/common/atoms/typography";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -160,9 +161,9 @@ export function AvatarIconSelector({
     <Card className={className}>
       <CardHeader>
         <CardTitle className="text-lg">Choose an Avatar Icon</CardTitle>
-        <p className="text-sm text-muted-foreground">
+        <Typography.Body className="text-sm text-muted-foreground">
           Select an icon that represents you
-        </p>
+        </Typography.Body>
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3">
@@ -174,7 +175,7 @@ export function AvatarIconSelector({
               <div key={avatarIcon.id} className="text-center">
                 <Button
                   variant="ghost"
-                  className={`w-16 h-16 rounded-full p-0 relative hover:scale-105 transition-all ${
+                  className={`relative size-16 rounded-full p-0 transition-all hover:scale-105 ${
                     isSelected
                       ? `${avatarIcon.bgColor} ring-2 ring-primary ring-offset-2`
                       : `${avatarIcon.bgColor} hover:${avatarIcon.bgColor}`
@@ -182,17 +183,17 @@ export function AvatarIconSelector({
                   onClick={() => onSelectIcon(avatarIcon.id)}
                 >
                   <IconComponent
-                    className={`h-6 w-6 sm:h-8 sm:w-8 ${avatarIcon.color}`}
+                    className={`size-6 sm:size-8 ${avatarIcon.color}`}
                   />
                   {isSelected && (
-                    <div className="absolute -top-1 -right-1 bg-primary text-primary-foreground rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center">
-                      <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-current rounded-full" />
+                    <div className="absolute -top-1 -right-1 flex size-4 items-center justify-center rounded-full bg-primary text-primary-foreground sm:size-5">
+                      <div className="size-1.5 rounded-full bg-current sm:size-2" />
                     </div>
                   )}
                 </Button>
-                <p className="text-xs text-muted-foreground mt-1 truncate">
+                <Typography.SubCaption className="mt-1 block truncate text-muted-foreground">
                   {avatarIcon.name}
-                </p>
+                </Typography.SubCaption>
               </div>
             );
           })}
@@ -238,10 +239,10 @@ export function AvatarIconDisplay({
   const IconComponent = avatarIcon.icon;
 
   const sizeClasses = {
-    sm: "w-4 h-4",
-    md: "w-6 h-6",
-    lg: "w-8 h-8",
-    xl: "w-12 h-12",
+    sm: "size-4",
+    md: "size-6",
+    lg: "size-8",
+    xl: "size-12",
   };
 
   return (

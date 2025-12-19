@@ -36,7 +36,8 @@ const jobListingQuestionsSchema = z.object({
 export type JobListingQuestions = z.infer<typeof jobListingQuestionsSchema>;
 
 function getMistralClient(): Mistral {
-  const apiKey = process.env.NEXT_PUBLIC_MISTRAL_API_KEY;
+  const apiKey =
+    process.env.MISTRAL_API_KEY ?? process.env.NEXT_PUBLIC_MISTRAL_API_KEY;
 
   if (!apiKey) {
     throw new Error("MISTRAL_API_KEY is not configured");

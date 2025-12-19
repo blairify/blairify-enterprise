@@ -2,6 +2,8 @@
 import { Cookie, FileText, Lock, Scale, Shield } from "lucide-react";
 import Link from "next/link";
 
+import { Typography } from "@/components/common/atoms/typography";
+
 export default function Footer() {
   const currentYear = new Date().getFullYear();
 
@@ -21,9 +23,9 @@ export default function Footer() {
           {/* Brand + Legal Links */}
           <div className="w-full flex flex-col items-center lg:items-start gap-4 sm:gap-6">
             {/* Brand */}
-            <h3 className="font-extrabold font-stretch-extra-expanded text-lg sm:text-xl text-foreground whitespace-nowrap text-center lg:text-left">
+            <Typography.Heading3 className="font-extrabold font-stretch-extra-expanded text-lg sm:text-xl text-foreground whitespace-nowrap text-center lg:text-left">
               Blairify
-            </h3>
+            </Typography.Heading3>
 
             {/* Legal Links */}
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:flex lg:flex-wrap gap-x-4 sm:gap-x-6 gap-y-3 sm:gap-y-2 text-sm sm:text-base w-full lg:w-auto">
@@ -35,7 +37,7 @@ export default function Footer() {
                     href={link.href}
                     className="hover:text-foreground transition-colors flex items-center gap-2 py-2 lg:py-0 touch-manipulation"
                   >
-                    <Icon className="w-3 h-3 sm:w-4 sm:h-4 lg:w-3 lg:h-3 flex-shrink-0" />
+                    <Icon className="size-3 sm:size-4 lg:size-3 flex-shrink-0" />
                     <span className="text-xs sm:text-sm lg:text-xs">
                       {link.label}
                     </span>
@@ -48,11 +50,11 @@ export default function Footer() {
           {/* Compliance Badges */}
           <div className="flex flex-wrap gap-2 sm:gap-3 justify-center lg:justify-end w-full lg:w-auto">
             <span className="flex items-center gap-1.5 sm:gap-2 bg-muted bg-opacity-30 px-3 sm:px-4 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm whitespace-nowrap">
-              <Shield className="w-3 h-3 sm:w-4 sm:h-4" />
+              <Shield className="size-3 sm:size-4" />
               GDPR Compliant
             </span>
             <span className="flex items-center gap-1.5 sm:gap-2 bg-muted bg-opacity-30 px-3 sm:px-4 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm whitespace-nowrap">
-              <Lock className="w-3 h-3 sm:w-4 sm:h-4" />
+              <Lock className="size-3 sm:size-4" />
               SSL Secured
             </span>
           </div>
@@ -60,18 +62,18 @@ export default function Footer() {
 
         {/* Bottom Section: Copyright & Contact */}
         <div className="flex flex-col sm:flex-row justify-center sm:justify-between items-center gap-3 sm:gap-4 pt-4 sm:pt-6 border-t border-border text-xs sm:text-sm">
-          <p className="text-center sm:text-left">
+          <Typography.Body className="text-center sm:text-left text-xs sm:text-sm">
             {currentYear} Blairify. All rights reserved.
-          </p>
-          <p className="text-center sm:text-right">
+          </Typography.Body>
+          <Typography.Body className="text-center sm:text-right text-xs sm:text-sm">
             <span className="block sm:inline">Data Protection: </span>
             <Link
-              href="mailto:blairiy.team@gmail.com"
+              href="mailto:blairify.team@gmail.com"
               className="underline hover:text-foreground transition-colors py-1 px-1 -mx-1 touch-manipulation"
             >
               blairify.team@gmail.com
             </Link>
-          </p>
+          </Typography.Body>
         </div>
       </div>
     </footer>

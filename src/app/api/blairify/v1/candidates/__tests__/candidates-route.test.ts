@@ -6,7 +6,6 @@ import { candidates, users } from "@/db/schema/auth";
 import { signupEnterpriseAdmin } from "@/lib/blairify-auth-service";
 import { clearSessionCookie, createSession } from "@/lib/session";
 import { signupRequestExample } from "@/lib/validation/blairify-auth";
-import { POST } from "../route";
 
 jest.mock("@/lib/rate-limit", () => {
   class RateLimitError extends Error {
@@ -62,6 +61,7 @@ describe("/api/blairify/v1/candidates", () => {
   });
 
   it("returns 401 when unauthenticated", async () => {
+    const { POST } = await import("../route");
     const req = buildRequest({
       fullName: "Test Candidate",
     });
@@ -74,6 +74,7 @@ describe("/api/blairify/v1/candidates", () => {
   });
 
   it("returns 403 when authenticated user lacks manage_candidates permission", async () => {
+    const { POST } = await import("../route");
     const suffix = uniqueSuffix();
     const domain = `forbidden-candidates-${suffix}.example.com`;
     const adminEmail = `admin-${suffix}@${domain}`;
@@ -128,6 +129,7 @@ describe("/api/blairify/v1/candidates", () => {
   });
 
   it("returns 400 on validation error", async () => {
+    const { POST } = await import("../route");
     const suffix = uniqueSuffix();
     const domain = `validation-candidates-${suffix}.example.com`;
     const adminEmail = `admin-${suffix}@${domain}`;
@@ -156,6 +158,7 @@ describe("/api/blairify/v1/candidates", () => {
   });
 
   it("returns 201 and candidate data for enterprise admin creating a candidate", async () => {
+    const { POST } = await import("../route");
     const suffix = uniqueSuffix();
     const domain = `success-candidates-${suffix}.example.com`;
     const adminEmail = `admin-${suffix}@${domain}`;
@@ -212,7 +215,31 @@ describe("/api/blairify/v1/candidates", () => {
   });
 
   it("returns 429 when rate limit is exceeded", async () => {
-    enforceRateLimit.mockImplementationOnce(() => {
+    const { POST } = await import("../route");
+    const suffix = uniqueSuffix();
+    const domain = `rate-limit-candidates-${suffix}.example.com`;
+    const adminEmail = `admin-${suffix}@${domain}`;
+
+    const signupInput = {
+      ...signupRequestExample,
+      email: adminEmail,
+      companyDomain: domain,
+    };
+
+    const signupResult = await signupEnterpriseAdmin(signupInput);
+
+    if (!signupResult.ok) {
+      throw new Error(
+        `Signup failed in rate-limit candidates test: ${signupResult.error}`,
+      );
+    }
+
+    await clearSessionCookie();
+    await createSession(signupResult.value.user);
+
+    enforceRateLimit.mockReset();
+
+    enforceRateLimit.mockImplementation(() => {
       throw new RateLimitError();
     });
 
