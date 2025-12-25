@@ -484,7 +484,7 @@ export function BuildInterviewAiChat({ onSummary }: BuildInterviewAiChatProps) {
                   onKeyDown={handleTextareaKeyDown}
                   placeholder="Begin with a brief description of the role and requirements..."
                   rows={3}
-                  className="flex-1 resize-none border-none !bg-transparent pr-28 text-base focus-visible:ring-0"
+                  className="flex-1 resize-none border-none shadow-none !bg-transparent pr-28 text-base focus-visible:ring-0"
                   autoFocus
                 />
                 <Button
