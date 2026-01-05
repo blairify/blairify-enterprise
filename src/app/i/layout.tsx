@@ -5,5 +5,5 @@ export default function PublicInterviewLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return children;
+  return <div className="h-screen overflow-y-auto">{children}</div>;
 }
