@@ -53,8 +53,9 @@ export function TestInterviewPlanPanel({
         initial={{ opacity: 0, y: 16, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.3, ease: "easeOut" }}
+        className="h-full overflow-y-auto"
       >
-        <Card className="shadow-xl shadow-primary/5">
+        <Card className="shadow-xl shadow-primary/5 sticky top-0">
           <CardContent className="space-y-4">
             <QuickPickControls
               selections={quickPickSelections}

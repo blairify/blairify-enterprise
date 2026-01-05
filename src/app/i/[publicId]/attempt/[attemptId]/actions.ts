@@ -60,6 +60,7 @@ export type PublicInterviewClientState = {
   currentQuestionIndex: number;
   totalQuestions: number;
   status: "in_progress" | "awaiting_scoring" | "completed";
+  interviewerId?: string;
 };
 
 type HireRecommendation = "strong_no" | "no" | "maybe" | "yes" | "strong_yes";
@@ -237,6 +238,7 @@ function toClientState(input: {
   stored: StoredPublicInterviewAttemptAnswersV2;
   questions: PlannedQuestion[];
   status: "in_progress" | "awaiting_scoring" | "completed";
+  interviewerId?: string;
 }): PublicInterviewClientState {
   return {
     messages: input.stored.messages.map((m) => ({
@@ -253,6 +255,7 @@ function toClientState(input: {
     currentQuestionIndex: input.stored.currentQuestionIndex,
     totalQuestions: input.questions.length,
     status: input.status,
+    interviewerId: input.interviewerId,
   };
 }
 
@@ -465,6 +468,7 @@ export async function startPublicInterviewAttemptAction(input: {
         stored,
         questions,
         status: "completed",
+        interviewerId: interviewer.id,
       });
     }
 
@@ -486,6 +490,7 @@ export async function startPublicInterviewAttemptAction(input: {
       stored: existing,
       questions,
       status,
+      interviewerId: interviewer.id,
     });
   }
 
@@ -516,16 +521,9 @@ export async function startPublicInterviewAttemptAction(input: {
       {
         id: crypto.randomUUID(),
         role: "ai",
-        kind: "intro",
-        content: `${interviewer.name} here. ${interviewer.title}. Answer as clearly as you can — feel free to think out loud.`,
-        createdAt: now,
-      },
-      {
-        id: crypto.randomUUID(),
-        role: "ai",
         kind: "paraphrase",
         questionId: firstQuestion.id,
-        content: paraphrased,
+        content: `Hi! I'm ${interviewer.name}, ${interviewer.title}. Let's get started with your interview.\n\n${paraphrased}`,
         createdAt: now,
       },
     ],
@@ -544,7 +542,12 @@ export async function startPublicInterviewAttemptAction(input: {
       );
   });
 
-  return toClientState({ stored, questions, status: "in_progress" });
+  return toClientState({
+    stored,
+    questions,
+    status: "in_progress",
+    interviewerId: interviewer.id,
+  });
 }
 
 export async function sendPublicInterviewMessageAction(input: {
@@ -563,7 +566,12 @@ export async function sendPublicInterviewMessageAction(input: {
   if (attempt.status === "completed") {
     const stored = asStoredAnswers(attempt.answers);
     if (stored && stored.version === 2) {
-      return toClientState({ stored, questions, status: "completed" });
+      return toClientState({
+        stored,
+        questions,
+        status: "completed",
+        interviewerId: interviewer.id,
+      });
     }
     return {
       messages: [],
@@ -605,6 +613,7 @@ export async function sendPublicInterviewMessageAction(input: {
         currentStored.currentQuestionIndex >= questions.length
           ? "awaiting_scoring"
           : "in_progress",
+      interviewerId: interviewer.id,
     });
   }
 
@@ -747,6 +756,7 @@ export async function sendPublicInterviewMessageAction(input: {
     stored: nextStored,
     questions,
     status,
+    interviewerId: interviewer.id,
   });
 }
 

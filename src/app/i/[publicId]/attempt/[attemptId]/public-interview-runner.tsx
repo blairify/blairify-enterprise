@@ -2,7 +2,7 @@
 
 import type { KeyboardEvent } from "react";
 import { useEffect, useMemo, useState, useTransition } from "react";
-
+import Logo from "@/components/common/atoms/logo-blairify";
 import { Typography } from "@/components/common/atoms/typography";
 import { Button } from "@/components/ui/button";
 import {
@@ -56,6 +56,22 @@ function readQuestions(plan: unknown): PlannedQuestion[] {
   return out;
 }
 
+function readCompanyName(plan: unknown): string | undefined {
+  if (!plan || typeof plan !== "object") return undefined;
+  const summary = (plan as { summary?: unknown }).summary;
+  if (!summary || typeof summary !== "object") return undefined;
+  const companyProfile = (summary as { companyProfile?: unknown })
+    .companyProfile;
+  if (
+    typeof companyProfile === "string" &&
+    companyProfile.trim() &&
+    companyProfile !== "unknown"
+  ) {
+    return companyProfile.trim();
+  }
+  return undefined;
+}
+
 export function PublicInterviewRunner({
   publicId,
   attemptId,
@@ -64,6 +80,7 @@ export function PublicInterviewRunner({
   isCompleted,
 }: PublicInterviewRunnerProps) {
   const questions = useMemo(() => readQuestions(plan), [plan]);
+  const companyName = useMemo(() => readCompanyName(plan), [plan]);
 
   const [state, setState] = useState<PublicInterviewClientState | null>(null);
   const [input, setInput] = useState("");
@@ -99,6 +116,7 @@ export function PublicInterviewRunner({
   const messages = state?.messages ?? [];
   const currentQuestionIndex = state?.currentQuestionIndex ?? 0;
   const totalQuestions = state?.totalQuestions ?? questions.length;
+  const interviewerId = state?.interviewerId;
 
   async function handleSend() {
     const trimmed = input.trim();
@@ -170,13 +188,22 @@ export function PublicInterviewRunner({
 
   if (status === "completed") {
     return (
-      <div className="space-y-2">
-        <Typography.Heading3 className="text-2xl font-semibold">
-          {linkTitle}
-        </Typography.Heading3>
-        <Typography.Body className="text-sm text-muted-foreground">
-          Thank you. Your interview is complete.
-        </Typography.Body>
+      <div className="flex min-h-[70vh] flex-col items-center justify-center px-4">
+        <Logo variant="iconOnly" iconSize={72} textClassName="text-3xl" />
+        <Typography.Heading2 className="mb-2 mt-10 text-center text-2xl font-semibold">
+          Interview Complete
+        </Typography.Heading2>
+
+        <Typography.Caption className="max-w-md text-center text-muted-foreground">
+          Thank you for completing your interview. Your responses have been
+          submitted and recruiters will be in touch.
+        </Typography.Caption>
+        <div className="mt-8 rounded-lg border border-border/50 bg-muted/30 px-6 py-2 text-center">
+          <Typography.SubCaption className="text-muted-foreground">
+            You can safely close this page now.
+          </Typography.SubCaption>
+        </div>
+        <div className="mt-8"></div>
       </div>
     );
   }
@@ -187,34 +214,38 @@ export function PublicInterviewRunner({
     <div className="space-y-8">
       <PublicInterviewHeader
         linkTitle={linkTitle}
+        companyName={companyName}
         currentQuestion={Math.min(currentQuestionIndex + 1, totalQuestions)}
         totalQuestions={totalQuestions}
         isSaving={isPending}
       />
 
-      <section className="space-y-6 rounded-3xl border border-border/70 bg-background/80 p-4 shadow-xl shadow-primary/5 backdrop-blur">
-        <div className="max-h-[55vh] min-h-[45vh] overflow-y-auto pr-3">
+      <div className="flex flex-col rounded-2xl border border-border/50 bg-background/95 shadow-2xl shadow-primary/5 backdrop-blur overflow-hidden">
+        <div className="flex-1 max-h-[60vh] min-h-[40vh] overflow-y-auto">
           <PublicInterviewMessages
-            linkTitle={linkTitle}
             messages={messages}
             isSaving={isPending}
+            interviewerId={interviewerId}
           />
         </div>
 
         {error ? (
-          <Typography.Body className="text-sm text-destructive">
-            {error}
-          </Typography.Body>
+          <div className="px-4 py-2 bg-destructive/10 border-t border-destructive/20">
+            <Typography.SubCaption className="text-destructive">
+              {error}
+            </Typography.SubCaption>
+          </div>
         ) : null}
 
         {showSubmit ? (
-          <div className="flex flex-col gap-3">
-            <Typography.Body className="text-sm text-muted-foreground">
-              You’ve answered all questions. Submit to finish.
-            </Typography.Body>
-            <div className="flex justify-end">
+          <div className="border-t border-border/50 bg-gradient-to-t from-background to-background/80 p-6">
+            <div className="mx-auto max-w-2xl text-center space-y-4">
+              <Typography.Body className="text-muted-foreground">
+                You've answered all questions. Ready to submit?
+              </Typography.Body>
               <Button
                 type="button"
+                size="lg"
                 onClick={() => void handleSubmitForScoring()}
                 disabled={isPending}
               >
@@ -234,7 +265,7 @@ export function PublicInterviewRunner({
             error={error}
           />
         )}
-      </section>
+      </div>
     </div>
   );
 }

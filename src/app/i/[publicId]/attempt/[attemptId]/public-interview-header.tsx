@@ -1,7 +1,9 @@
+import Logo from "@/components/common/atoms/logo-blairify";
 import { Typography } from "@/components/common/atoms/typography";
 
 interface PublicInterviewHeaderProps {
   linkTitle: string;
+  companyName?: string;
   currentQuestion: number;
   totalQuestions: number;
   isSaving: boolean;
@@ -9,6 +11,7 @@ interface PublicInterviewHeaderProps {
 
 export function PublicInterviewHeader({
   linkTitle,
+  companyName,
   currentQuestion,
   totalQuestions,
   isSaving,
@@ -19,11 +22,14 @@ export function PublicInterviewHeader({
 
   return (
     <header className="space-y-3 text-center">
-      <Typography.SubCaption className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-        Blairify Interview
-      </Typography.SubCaption>
+      <Logo variant="iconText" iconSize={24} />
       <Typography.Heading3 className="text-2xl font-semibold text-foreground sm:text-3xl">
         {linkTitle}
+        {companyName ? (
+          <Typography.Caption className="ml-2 font-normal text-muted-foreground">
+            at {companyName}
+          </Typography.Caption>
+        ) : null}
       </Typography.Heading3>
       <div className="space-y-2">
         <div className="flex items-center justify-between text-xs font-medium text-muted-foreground">

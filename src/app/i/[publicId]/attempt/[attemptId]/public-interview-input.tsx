@@ -35,72 +35,76 @@ export function PublicInterviewInput({
   const nearLimit = charCount > MAX_CHARS * 0.8;
 
   return (
-    <section className="space-y-4 rounded-3xl border border-border/60 bg-background/80 p-4 shadow-lg shadow-primary/5 backdrop-blur">
-      <div className="flex items-center justify-between gap-3">
-        <Typography.SubCaption className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-          Your response
-        </Typography.SubCaption>
-        <Typography.SubCaption
-          className={`text-xs ${nearLimit ? "text-destructive" : "text-muted-foreground"}`}
-        >
-          {remaining} characters left
-        </Typography.SubCaption>
-      </div>
-
-      <div className="relative">
-        <Textarea
-          value={value}
-          onChange={(event) => {
-            const next = event.target.value;
-            if (next.length <= MAX_CHARS) {
-              onChange(next);
+    <div className="border-t border-border/50 bg-gradient-to-t from-background to-background/80 px-4 py-4">
+      <div className="mx-auto max-w-2xl">
+        <div className="relative rounded-2xl border border-border/70 bg-background shadow-lg shadow-primary/5 transition-shadow focus-within:border-primary/50 focus-within:shadow-primary/10">
+          <Textarea
+            value={value}
+            onChange={(event) => {
+              const next = event.target.value;
+              if (next.length <= MAX_CHARS) {
+                onChange(next);
+              }
+            }}
+            onKeyDown={onKeyDown}
+            placeholder="Type your answer here..."
+            disabled={disabled || isSaving}
+            className="min-h-[120px] max-h-[300px] resize-none border-0 bg-transparent px-4 py-4 pr-14 text-base focus-visible:ring-0 focus-visible:ring-offset-0"
+            aria-invalid={Boolean(error)}
+            aria-describedby={
+              error ? "public-interview-answer-error" : undefined
             }
-          }}
-          onKeyDown={onKeyDown}
-          placeholder="Type your answer…"
-          disabled={disabled || isSaving}
-          className="min-h-[140px] resize-none border-border/70 bg-background/90 text-base"
-          aria-invalid={Boolean(error)}
-          aria-describedby={error ? "public-interview-answer-error" : undefined}
-        />
+          />
 
-        <Button
-          type="button"
-          className="absolute bottom-3 right-3 rounded-full"
-          size="icon"
-          disabled={disabled || isSaving || !value.trim()}
-          onClick={onSubmit}
-          aria-label="Submit answer"
-        >
-          <ArrowUp className="size-4" />
-        </Button>
-      </div>
+          <div className="absolute bottom-3 right-3">
+            <Button
+              type="button"
+              className="h-10 w-10 rounded-xl shadow-md transition-transform hover:scale-105"
+              size="icon"
+              disabled={disabled || isSaving || !value.trim()}
+              onClick={onSubmit}
+              aria-label="Submit answer"
+            >
+              <ArrowUp className="size-5" />
+            </Button>
+          </div>
+        </div>
 
-      {error ? (
-        <Typography.Body
-          id="public-interview-answer-error"
-          className="text-sm text-destructive"
-        >
-          {error}
-        </Typography.Body>
-      ) : null}
+        {error ? (
+          <Typography.SubCaption
+            id="public-interview-answer-error"
+            className="mt-2 block text-destructive"
+          >
+            {error}
+          </Typography.SubCaption>
+        ) : null}
 
-      <div className="flex flex-wrap items-center gap-2">
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          className="gap-2"
-          disabled={!hasStoredAnswer || disabled || isSaving}
-          onClick={onRestore}
-        >
-          <RotateCcw className="size-4" />
-          Restore answer
-        </Button>
-        <div className="text-xs text-muted-foreground">
-          Press Enter to submit. Shift + Enter for a new line.
+        <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
+          <div className="flex items-center gap-3">
+            {hasStoredAnswer ? (
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="h-8 gap-1.5 text-xs"
+                disabled={disabled || isSaving}
+                onClick={onRestore}
+              >
+                <RotateCcw className="size-3.5" />
+                Restore
+              </Button>
+            ) : null}
+            <Typography.SubCaption className="text-muted-foreground">
+              ↵ Enter to send · ⇧↵ for new line
+            </Typography.SubCaption>
+          </div>
+          <Typography.SubCaption
+            className={nearLimit ? "text-destructive" : "text-muted-foreground"}
+          >
+            {remaining.toLocaleString()} / {MAX_CHARS.toLocaleString()}
+          </Typography.SubCaption>
         </div>
       </div>
-    </section>
+    </div>
   );
 }

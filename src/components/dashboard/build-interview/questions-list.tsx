@@ -32,7 +32,7 @@ export function QuestionsList({
   });
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-3 pb-8">
       <div className="text-center">
         <Typography.Body className="text-lg font-semibold">
           Questions that will be asked
@@ -41,11 +41,14 @@ export function QuestionsList({
           {questions.length} questions
         </Typography.Caption>
       </div>
-      <div>
-        <ol className="grid gap-2 text-sm md:grid-cols-2 lg:grid-cols-3  ">
+      <div className="overflow-x-auto">
+        <ol className="grid gap-2 text-sm md:grid-cols-2 lg:grid-cols-3">
           {sortedQuestions.map((q, index) => (
-            <li key={q.id} className="rounded-md border bg-muted/20 px-3 py-4">
-              <div className="flex mb-6  items-center justify-between gap-3">
+            <li
+              key={q.id}
+              className="rounded-md border bg-muted/20 px-3 py-4 min-w-0"
+            >
+              <div className="flex mb-4 items-center justify-between gap-2 flex-wrap">
                 <Typography.SubCaption className="text-muted-foreground">
                   Question {index + 1}
                 </Typography.SubCaption>
@@ -63,13 +66,11 @@ export function QuestionsList({
                 )}
               </div>
               {q.title ? (
-                <Typography.BodyBold className="mb-3 mt-6 text-muted-foreground">
+                <Typography.BodyBold className="mb-2 mt-2 text-muted-foreground break-words">
                   {q.title}
                 </Typography.BodyBold>
               ) : null}
-              <Typography.SubCaption
-                className={`whitespace-pre-wrap break-words ${q.description ? "mt-3" : "mt-6"}`}
-              >
+              <Typography.SubCaption className="whitespace-pre-wrap break-words mt-2 overflow-hidden">
                 {q.description ?? q.prompt}
               </Typography.SubCaption>
             </li>

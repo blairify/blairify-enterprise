@@ -50,93 +50,107 @@ export function PublicInterviewIntakeForm({
   const cvError = firstError(state, "cvFile");
 
   return (
-    <form action={formAction} className="space-y-4">
-      <div className="grid gap-4 md:grid-cols-2">
+    <form action={formAction} className="space-y-6">
+      <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-2">
-          <Label htmlFor="firstName">First name</Label>
+          <Label htmlFor="firstName" className="text-sm font-medium">
+            First name
+          </Label>
           <Input
             id="firstName"
             name="firstName"
+            placeholder="John"
             aria-invalid={!!firstNameError}
             aria-describedby={
               firstNameError ? "public-intake-first-name-error" : undefined
             }
           />
           {firstNameError ? (
-            <Typography.Body
+            <Typography.SubCaption
               id="public-intake-first-name-error"
-              className="text-sm text-destructive"
+              className="text-destructive"
             >
               {firstNameError}
-            </Typography.Body>
+            </Typography.SubCaption>
           ) : null}
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="lastName">Last name</Label>
+          <Label htmlFor="lastName" className="text-sm font-medium">
+            Last name
+          </Label>
           <Input
             id="lastName"
             name="lastName"
+            placeholder="Doe"
             aria-invalid={!!lastNameError}
             aria-describedby={
               lastNameError ? "public-intake-last-name-error" : undefined
             }
           />
           {lastNameError ? (
-            <Typography.Body
+            <Typography.SubCaption
               id="public-intake-last-name-error"
-              className="text-sm text-destructive"
+              className="text-destructive"
             >
               {lastNameError}
-            </Typography.Body>
+            </Typography.SubCaption>
           ) : null}
         </div>
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="email">Email</Label>
+        <Label htmlFor="email" className="text-sm font-medium">
+          Email
+        </Label>
         <Input
           id="email"
           name="email"
           type="email"
+          placeholder="john.doe@example.com"
           aria-invalid={!!emailError}
           aria-describedby={
             emailError ? "public-intake-email-error" : undefined
           }
         />
         {emailError ? (
-          <Typography.Body
+          <Typography.SubCaption
             id="public-intake-email-error"
-            className="text-sm text-destructive"
+            className="text-destructive"
           >
             {emailError}
-          </Typography.Body>
+          </Typography.SubCaption>
         ) : null}
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-2">
-          <Label htmlFor="phone">Phone</Label>
+          <Label htmlFor="phone" className="text-sm font-medium">
+            Phone
+          </Label>
           <Input
             id="phone"
             name="phone"
+            placeholder="+1 234 567 890"
             aria-invalid={!!phoneError}
             aria-describedby={
               phoneError ? "public-intake-phone-error" : undefined
             }
           />
           {phoneError ? (
-            <Typography.Body
+            <Typography.SubCaption
               id="public-intake-phone-error"
-              className="text-sm text-destructive"
+              className="text-destructive"
             >
               {phoneError}
-            </Typography.Body>
+            </Typography.SubCaption>
           ) : null}
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="location">Place of living</Label>
+          <Label htmlFor="location" className="text-sm font-medium">
+            Location
+          </Label>
           <Input
             id="location"
             name="location"
@@ -147,47 +161,57 @@ export function PublicInterviewIntakeForm({
             placeholder="City, Country"
           />
           {locationError ? (
-            <Typography.Body
+            <Typography.SubCaption
               id="public-intake-location-error"
-              className="text-sm text-destructive"
+              className="text-destructive"
             >
               {locationError}
-            </Typography.Body>
+            </Typography.SubCaption>
           ) : null}
         </div>
       </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="cvFile">CV (PDF, optional)</Label>
+      <div className="space-y-2 opacity-50">
+        <Label htmlFor="cvFile" className="text-sm font-medium">
+          CV{" "}
+          <Typography.SubCaption className="text-muted-foreground">
+            (PDF, optional)
+          </Typography.SubCaption>
+        </Label>
         <Input
           id="cvFile"
           name="cvFile"
           type="file"
           accept="application/pdf"
+          disabled
+          className="cursor-not-allowed"
           aria-invalid={!!cvError}
           aria-describedby={cvError ? "public-intake-cv-error" : undefined}
         />
+        <Typography.SubCaption className="text-muted-foreground italic">
+          CV upload is disabled in Beta
+        </Typography.SubCaption>
         {cvError ? (
-          <Typography.Body
+          <Typography.SubCaption
             id="public-intake-cv-error"
-            className="text-sm text-destructive"
+            className="text-destructive"
           >
             {cvError}
-          </Typography.Body>
+          </Typography.SubCaption>
         ) : null}
       </div>
 
       {state.status === "error" && state.message ? (
-        <Typography.Body className="text-sm text-destructive">
-          {state.message}
-        </Typography.Body>
+        <div className="rounded-md border border-destructive/50 bg-destructive/10 p-3">
+          <Typography.Caption className="text-destructive">
+            {state.message}
+          </Typography.Caption>
+        </div>
       ) : null}
 
-      <div className="flex flex-col sm:flex-row sm:justify-end">
-        <Button type="submit" disabled={isPending} className="w-full sm:w-auto">
-          {isPending ? "Starting..." : "Start interview"}
-        </Button>
-      </div>
+      <Button type="submit" disabled={isPending} className="w-full" size="lg">
+        {isPending ? "Starting interview..." : "Start interview"}
+      </Button>
     </form>
   );
 }

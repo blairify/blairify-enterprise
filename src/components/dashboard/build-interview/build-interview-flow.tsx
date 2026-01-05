@@ -76,7 +76,7 @@ export function BuildInterviewFlow() {
   }
 
   const gridClassName = summary
-    ? "grid gap-6 lg:grid-cols-[1fr_420px]"
+    ? "grid gap-6 lg:grid-cols-[1fr_420px] h-[calc(100vh-12rem)]"
     : "grid gap-6";
 
   async function handleGenerate() {
@@ -115,48 +115,44 @@ export function BuildInterviewFlow() {
   }
 
   return (
-    <div className="bg-background flex items-stretch justify-center">
-      <div className="w-full max-w-6xl">
-        <div className={gridClassName}>
-          <BuildInterviewAiChat
-            onSummary={(value) => setSummary(value)}
+    <div className="w-full max-w-6xl mx-auto">
+      <div className={gridClassName}>
+        <BuildInterviewAiChat
+          onSummary={(value) => setSummary(value)}
+          quickPickSelections={quickPickSelections}
+          onQuickPickSelectionsChange={setQuickPickSelections}
+          isSending={isSending}
+          onIsSendingChange={setIsSending}
+          isSummarizing={isSummarizing}
+          onIsSummarizingChange={setIsSummarizing}
+          onSendMessageRef={sendMessageRef}
+        />
+        {summary ? (
+          <TestInterviewPlanPanel
+            summary={summary}
+            isGenerating={isGenerating}
+            error={error}
+            canStart={Boolean(questions && questions.length > 0 && isReviewed)}
+            onGenerate={handleGenerate}
             quickPickSelections={quickPickSelections}
-            onQuickPickSelectionsChange={setQuickPickSelections}
+            onQuickPickSelect={handleQuickPickSelect}
             isSending={isSending}
-            onIsSendingChange={setIsSending}
             isSummarizing={isSummarizing}
-            onIsSummarizingChange={setIsSummarizing}
-            onSendMessageRef={sendMessageRef}
           />
-          {summary ? (
-            <TestInterviewPlanPanel
-              summary={summary}
-              isGenerating={isGenerating}
-              error={error}
-              canStart={Boolean(
-                questions && questions.length > 0 && isReviewed,
-              )}
-              onGenerate={handleGenerate}
-              quickPickSelections={quickPickSelections}
-              onQuickPickSelect={handleQuickPickSelect}
-              isSending={isSending}
-              isSummarizing={isSummarizing}
-            />
-          ) : null}
-        </div>
-
-        {summary && questions && questions.length > 0 ? (
-          <div className="mt-6">
-            <QuestionsList
-              summary={summary}
-              questions={questions}
-              isReviewed={isReviewed}
-              onReviewedChange={setIsReviewed}
-              onStart={handleStart}
-            />
-          </div>
         ) : null}
       </div>
+
+      {summary && questions && questions.length > 0 ? (
+        <div className="mt-6">
+          <QuestionsList
+            summary={summary}
+            questions={questions}
+            isReviewed={isReviewed}
+            onReviewedChange={setIsReviewed}
+            onStart={handleStart}
+          />
+        </div>
+      ) : null}
     </div>
   );
 }

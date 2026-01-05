@@ -124,7 +124,7 @@ export default function RootLayout({
     <html lang="en" title="Blairify" suppressHydrationWarning>
       <head />
       <body
-        className={`${bodyFont.variable} ${headingFont.variable} font-sans antialiased min-h-screen bg-background text-foreground`}
+        className={`${bodyFont.variable} ${headingFont.variable} font-sans antialiased h-screen overflow-hidden bg-background text-foreground`}
       >
         <Suspense fallback={<LoadingPage />}>
           <ThemeProvider
@@ -134,7 +134,7 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <SWRProvider>
-              <div className="flex flex-col min-h-screen">{children}</div>
+              {children}
               <Toaster />
             </SWRProvider>
           </ThemeProvider>

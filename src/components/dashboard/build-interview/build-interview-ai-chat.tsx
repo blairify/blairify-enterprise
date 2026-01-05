@@ -434,7 +434,7 @@ export function BuildInterviewAiChat({
     }
     case "conversation": {
       return (
-        <section className="flex h-[calc(100vh-8rem)] supports-[height:100dvh]:h-[calc(100dvh-8rem)] w-full overflow-hidden">
+        <section className="flex h-full w-full overflow-hidden flex-col">
           <div className="flex min-h-0 flex-1 min-w-0 flex-col pb-6 gap-4">
             {error ? (
               <Typography.SubCaption className="block text-destructive">
