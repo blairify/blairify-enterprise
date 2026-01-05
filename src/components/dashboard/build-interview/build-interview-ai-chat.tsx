@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowUp } from "lucide-react";
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import type {
   AiChatMessage,
@@ -17,7 +17,6 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { INTERVIEWERS } from "@/lib/config/interviewers";
 import {
-  COMPANY_PROFILES,
   INTERVIEW_DURATIONS,
   POSITIONS,
   SENIORITY_LEVELS,
@@ -25,16 +24,102 @@ import {
 
 type BuildInterviewPhase = "landing" | "firstPrompt" | "conversation";
 
-type QuickPickField = "position" | "seniority" | "companyProfile" | "duration";
+export type QuickPickField = "position" | "seniority" | "duration";
 
-type QuickPickSelections = Record<QuickPickField, string | null>;
+export type QuickPickSelections = Record<QuickPickField, string | null>;
 
 interface BuildInterviewAiChatProps {
   onSummary?: (summary: AiPositionSummary) => void;
+  quickPickSelections: QuickPickSelections;
+  onQuickPickSelectionsChange: (selections: QuickPickSelections) => void;
+  isSending: boolean;
+  onIsSendingChange: (value: boolean) => void;
+  isSummarizing: boolean;
+  onIsSummarizingChange: (value: boolean) => void;
+  onSendMessageRef?: React.MutableRefObject<
+    ((content: string) => Promise<void>) | null
+  >;
 }
 
-export function BuildInterviewAiChat({ onSummary }: BuildInterviewAiChatProps) {
+export function BuildInterviewAiChat({
+  onSummary,
+  quickPickSelections,
+  onQuickPickSelectionsChange,
+  isSending,
+  onIsSendingChange,
+  isSummarizing,
+  onIsSummarizingChange,
+  onSendMessageRef,
+}: BuildInterviewAiChatProps) {
   const interviewer = INTERVIEWERS[0];
+
+  function normalizeMessageContent(value: string): string {
+    return value
+      .replace(/\s+/g, " ")
+      .replace(/\s+([.,!?;:])/g, "$1")
+      .trim();
+  }
+
+  const normalizeLabel = useCallback(
+    (value: string | null | undefined): string | null => {
+      if (!value) return null;
+      const trimmed = value.trim();
+      if (!trimmed || trimmed.toLowerCase() === "unknown") return null;
+      return trimmed.toLowerCase();
+    },
+    [],
+  );
+
+  const matchOptionValue = useCallback(
+    (
+      value: string | null | undefined,
+      options: { value: string; label: string }[],
+    ) => {
+      const normalized = normalizeLabel(value);
+      if (!normalized) return null;
+
+      const exact = options.find(
+        (option) => normalizeLabel(option.label) === normalized,
+      );
+      if (exact) return exact.value;
+
+      const contains = options.find((option) => {
+        const label = normalizeLabel(option.label);
+        return (
+          !!label &&
+          (label.includes(normalized) || normalized.includes(label)) &&
+          normalized.length >= 3
+        );
+      });
+      return contains?.value ?? null;
+    },
+    [normalizeLabel],
+  );
+
+  const matchDurationValue = useCallback(
+    (value: string | null | undefined) => {
+      const normalized = normalizeLabel(value);
+      if (!normalized) return null;
+
+      const option = INTERVIEW_DURATIONS.find((duration) => {
+        const label = normalizeLabel(duration.label);
+        return label === normalized;
+      });
+
+      if (option) return option.value;
+
+      const matchMinutes = normalized.match(/(\d{2,3})/);
+      if (matchMinutes) {
+        const candidate = INTERVIEW_DURATIONS.find(
+          (duration) => duration.value === matchMinutes[1],
+        );
+        if (candidate) return candidate.value;
+      }
+
+      return null;
+    },
+    [normalizeLabel],
+  );
 
   const [messages, setMessages] = useState<AiChatMessage[]>([
     {
@@ -44,26 +129,57 @@ export function BuildInterviewAiChat({ onSummary }: BuildInterviewAiChatProps) {
     },
   ]);
   const [input, setInput] = useState("");
-  const [quickPickSelections, setQuickPickSelections] =
-    useState<QuickPickSelections>({
-      position: null,
-      seniority: null,
-      companyProfile: null,
-      duration: null,
-    });
-  const [isSending, setIsSending] = useState(false);
-  const [isSummarizing, setIsSummarizing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [summary, setSummary] = useState<AiPositionSummary | null>(null);
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [isAsideVisible, setIsAsideVisible] = useState(true);
   const [phase, setPhase] = useState<BuildInterviewPhase>("landing");
+
+  useEffect(() => {
+    if (!summary) return;
+
+    const updates: QuickPickSelections = { ...quickPickSelections };
+    let changed = false;
+
+    const nextPosition = matchOptionValue(summary.position, POSITIONS);
+    const nextSeniority = matchOptionValue(summary.seniority, SENIORITY_LEVELS);
+    const nextDuration = matchDurationValue(summary.duration);
+
+    if (nextPosition && updates.position !== nextPosition) {
+      updates.position = nextPosition;
+      changed = true;
+    }
+
+    if (nextSeniority && updates.seniority !== nextSeniority) {
+      updates.seniority = nextSeniority;
+      changed = true;
+    }
+
+    if (nextDuration && updates.duration !== nextDuration) {
+      updates.duration = nextDuration;
+      changed = true;
+    }
+
+    if (changed) {
+      onQuickPickSelectionsChange(updates);
+    }
+  }, [
+    summary,
+    matchOptionValue,
+    matchDurationValue,
+    quickPickSelections,
+    onQuickPickSelectionsChange,
+  ]);
+
+  useEffect(() => {
+    if (summary) {
+      onSummary?.(summary);
+    }
+  }, [summary, onSummary]);
 
   async function updateSummary(
     currentMessages: AiChatMessage[],
   ): Promise<AiPositionSummary | null> {
     setError(null);
-    setIsSummarizing(true);
+    onIsSummarizingChange(true);
 
     try {
       const result = await aiSummarizePosition(currentMessages);
@@ -73,7 +189,7 @@ export function BuildInterviewAiChat({ onSummary }: BuildInterviewAiChatProps) {
       setError("Unable to summarize position right now. Please try again.");
       return null;
     } finally {
-      setIsSummarizing(false);
+      onIsSummarizingChange(false);
     }
   }
 
@@ -131,20 +247,26 @@ export function BuildInterviewAiChat({ onSummary }: BuildInterviewAiChatProps) {
     const nextMessages = [...messages, userMessage];
 
     setMessages(nextMessages);
-    setIsSending(true);
+    onIsSendingChange(true);
 
     try {
       const assistantMessage = await aiChatRespond(nextMessages);
-      const withAssistant = [...nextMessages, assistantMessage];
+      const normalizedContent = normalizeMessageContent(
+        assistantMessage.content,
+      );
+      const withAssistant = [
+        ...nextMessages,
+        { ...assistantMessage, content: normalizedContent },
+      ];
 
-      await streamAssistantMessage(assistantMessage.content, nextMessages);
+      await streamAssistantMessage(normalizedContent, nextMessages);
       await updateSummary(withAssistant);
     } catch {
       setError(
         "Something went wrong while contacting Blairify AI. Please try again.",
       );
     } finally {
-      setIsSending(false);
+      onIsSendingChange(false);
     }
   }
 
@@ -189,7 +311,6 @@ export function BuildInterviewAiChat({ onSummary }: BuildInterviewAiChatProps) {
     }
 
     const trimmed = input.trim();
-
     if (!trimmed) {
       return;
     }
@@ -202,261 +323,29 @@ export function BuildInterviewAiChat({ onSummary }: BuildInterviewAiChatProps) {
     await sendUserMessage(trimmed);
   }
 
-  async function handleSuggestionClick(
-    field: QuickPickField,
-    value: string,
-    label: string,
-  ) {
-    if (isSending || isSummarizing) {
+  const sendMessageCallbackRef =
+    useRef<(content: string) => Promise<void>>(sendUserMessage);
+  sendMessageCallbackRef.current = sendUserMessage;
+
+  useEffect(() => {
+    if (!onSendMessageRef) {
       return;
     }
 
-    setQuickPickSelections((previous) => ({
-      ...previous,
-      [field]: value,
-    }));
+    const handler = async (content: string) =>
+      sendMessageCallbackRef.current(content);
 
-    let content = "";
+    onSendMessageRef.current = handler;
 
-    switch (field) {
-      case "position": {
-        content = `Let's target the ${label} position.`;
-        break;
+    return () => {
+      if (onSendMessageRef.current === handler) {
+        onSendMessageRef.current = null;
       }
-      case "seniority": {
-        content = `The seniority level should be ${label}.`;
-        break;
-      }
-      case "companyProfile": {
-        content = `Use a ${label} company profile.`;
-        break;
-      }
-      case "duration": {
-        content = `Make the interview last ${label}.`;
-        break;
-      }
-      default: {
-        const _never: never = field;
-        throw new Error(`Unhandled suggestion field: ${_never}`);
-      }
-    }
-
-    await sendUserMessage(content);
-  }
-
-  function renderSuggestions() {
-    const showPosition = true;
-    const showSeniority = true;
-    const showCompanyProfile = true;
-    const showDuration = true;
-
-    if (
-      !showPosition &&
-      !showSeniority &&
-      !showCompanyProfile &&
-      !showDuration
-    ) {
-      return null;
-    }
-
-    return (
-      <div className="space-y-3 rounded-md border bg-muted/40 p-3">
-        <Typography.SubCaptionMedium className="block text-muted-foreground">
-          Quick picks
-        </Typography.SubCaptionMedium>
-        {showPosition ? (
-          <div className="space-y-1">
-            <Typography.SubCaption className="block text-muted-foreground">
-              Role
-            </Typography.SubCaption>
-            <div className="flex flex-wrap gap-2">
-              {POSITIONS.map((item) => {
-                const isSelected = quickPickSelections.position === item.value;
-
-                return (
-                  <Button
-                    key={item.value}
-                    type="button"
-                    variant={isSelected ? "secondary" : "outline"}
-                    size="sm"
-                    aria-pressed={isSelected}
-                    onClick={() =>
-                      handleSuggestionClick("position", item.value, item.label)
-                    }
-                    disabled={isSending || isSummarizing}
-                  >
-                    {item.label}
-                  </Button>
-                );
-              })}
-            </div>
-          </div>
-        ) : null}
-        {showSeniority ? (
-          <div className="space-y-1">
-            <Typography.SubCaption className="block text-muted-foreground">
-              Seniority
-            </Typography.SubCaption>
-            <div className="flex flex-wrap gap-2">
-              {SENIORITY_LEVELS.map((item) => {
-                const isSelected = quickPickSelections.seniority === item.value;
-
-                return (
-                  <Button
-                    key={item.value}
-                    type="button"
-                    variant={isSelected ? "secondary" : "outline"}
-                    size="sm"
-                    aria-pressed={isSelected}
-                    onClick={() =>
-                      handleSuggestionClick("seniority", item.value, item.label)
-                    }
-                    disabled={isSending || isSummarizing}
-                  >
-                    {item.label}
-                  </Button>
-                );
-              })}
-            </div>
-          </div>
-        ) : null}
-        {showCompanyProfile ? (
-          <div className="space-y-1">
-            <Typography.SubCaption className="block text-muted-foreground">
-              Company profile
-            </Typography.SubCaption>
-            <div className="flex flex-wrap gap-2">
-              {COMPANY_PROFILES.map((item) => {
-                const isSelected =
-                  quickPickSelections.companyProfile === item.value;
-
-                return (
-                  <Button
-                    key={item.value}
-                    type="button"
-                    variant={isSelected ? "secondary" : "outline"}
-                    size="sm"
-                    aria-pressed={isSelected}
-                    onClick={() =>
-                      handleSuggestionClick(
-                        "companyProfile",
-                        item.value,
-                        item.label,
-                      )
-                    }
-                    disabled={isSending || isSummarizing}
-                  >
-                    {item.label}
-                  </Button>
-                );
-              })}
-            </div>
-          </div>
-        ) : null}
-        {showDuration ? (
-          <div className="space-y-1">
-            <Typography.SubCaption className="block text-muted-foreground">
-              Duration
-            </Typography.SubCaption>
-            <div className="flex flex-wrap gap-2">
-              {INTERVIEW_DURATIONS.map((item) => {
-                const isSelected = quickPickSelections.duration === item.value;
-
-                return (
-                  <Button
-                    key={item.value}
-                    type="button"
-                    variant={isSelected ? "secondary" : "outline"}
-                    size="sm"
-                    aria-pressed={isSelected}
-                    onClick={() =>
-                      handleSuggestionClick("duration", item.value, item.label)
-                    }
-                    disabled={isSending || isSummarizing}
-                  >
-                    {item.label}
-                  </Button>
-                );
-              })}
-            </div>
-          </div>
-        ) : null}
-      </div>
-    );
-  }
-
-  function renderFieldChip(label: string, done: boolean) {
-    const baseClass =
-      "inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px]";
-    const stateClass = done
-      ? "border-emerald-500/70 bg-emerald-500/10 text-emerald-500"
-      : "border-border bg-muted/40 text-muted-foreground";
-
-    return (
-      <span className={`${baseClass} ${stateClass}`}>
-        <span
-          className={
-            done
-              ? "h-1.5 w-1.5 rounded-full bg-emerald-500"
-              : "h-1.5 w-1.5 rounded-full bg-muted-foreground/60"
-          }
-        />
-        <span>{label}</span>
-      </span>
-    );
-  }
-
-  function isMeaningfulText(value: string | null | undefined): value is string {
-    if (!value) {
-      return false;
-    }
-
-    const trimmed = value.trim();
-
-    if (!trimmed) {
-      return false;
-    }
-
-    return trimmed !== "unknown";
-  }
-
-  function isMeaningfulNotes(
-    value: string | null | undefined,
-  ): value is string {
-    if (!isMeaningfulText(value)) {
-      return false;
-    }
-
-    return value !== "No summary available.";
-  }
+    };
+  }, [onSendMessageRef]);
 
   const messagesContainerClass =
     "flex-1 min-h-0 overflow-y-auto space-y-3 pr-1 text-sm";
-
-  const hasSummary = summary !== null;
-  const positionDone = Boolean(summary && summary.position !== "unknown");
-  const seniorityDone = Boolean(summary && summary.seniority !== "unknown");
-  const companyDone = Boolean(summary && summary.companyProfile !== "unknown");
-  const durationDone = Boolean(
-    summary && summary.duration !== "unknown" && summary.duration.trim() !== "",
-  );
-  const stackDone = Boolean(
-    summary && summary.stack !== "unknown" && summary.stack.trim() !== "",
-  );
-  const modeDone = Boolean(
-    summary && isMeaningfulText(summary.mode) && summary.mode !== "regular",
-  );
-  const notesDone = Boolean(summary && isMeaningfulNotes(summary.notes));
-  const capturedCount =
-    Number(positionDone) +
-    Number(seniorityDone) +
-    Number(companyDone) +
-    Number(durationDone) +
-    Number(stackDone);
-  const allFieldsDone =
-    positionDone && seniorityDone && companyDone && durationDone && stackDone;
-  const dataComplete = hasSummary && allFieldsDone;
-  const canSummarize = dataComplete && !isSummarizing;
 
   switch (phase) {
     case "landing": {
@@ -545,19 +434,13 @@ export function BuildInterviewAiChat({ onSummary }: BuildInterviewAiChatProps) {
     }
     case "conversation": {
       return (
-        <section className="flex h-[calc(100vh-8rem)] supports-[height:100dvh]:h-[calc(100dvh-8rem)] w-full overflow-hidden flex-col gap-6 md:flex-row">
-          <div className="flex min-h-0 flex-1 min-w-0 flex-col pb-6">
-            <div className="mb-2 hidden justify-end md:flex">
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={() => setIsAsideVisible((previous) => !previous)}
-                className="shadow-xs"
-              >
-                {isAsideVisible ? "Hide interview data" : "Show interview data"}
-              </Button>
-            </div>
+        <section className="flex h-[calc(100vh-8rem)] supports-[height:100dvh]:h-[calc(100dvh-8rem)] w-full overflow-hidden">
+          <div className="flex min-h-0 flex-1 min-w-0 flex-col pb-6 gap-4">
+            {error ? (
+              <Typography.SubCaption className="block text-destructive">
+                {error}
+              </Typography.SubCaption>
+            ) : null}
             <div className={messagesContainerClass}>
               {messages.map((message, index) => {
                 const isUser = message.role === "user";
@@ -613,7 +496,7 @@ export function BuildInterviewAiChat({ onSummary }: BuildInterviewAiChatProps) {
               </div>
             )}
 
-            <form onSubmit={handleSend} className="mt-3 space-y-2">
+            <form onSubmit={handleSend} className="space-y-2">
               <label className="sr-only" htmlFor="ai-message">
                 Message Blairify AI
               </label>
@@ -636,169 +519,7 @@ export function BuildInterviewAiChat({ onSummary }: BuildInterviewAiChatProps) {
                 </Button>
               </div>
             </form>
-            <div className="mt-3 flex justify-end md:hidden">
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={() => setIsDrawerOpen(true)}
-                className="shadow-xs"
-              >
-                Interview data
-              </Button>
-            </div>
           </div>
-
-          <aside
-            className={`fixed inset-y-4 right-4 z-30 w-80 max-w-[85vw] overflow-y-auto rounded-2xl border border-border bg-card shadow-2xl transition-transform duration-200 md:static md:inset-auto md:z-auto md:mt-0 md:w-80 md:shrink-0 lg:w-96 ${
-              isDrawerOpen
-                ? "translate-x-0"
-                : "translate-x-full md:translate-x-0"
-            } ${isAsideVisible ? "" : "md:hidden"}`}
-            aria-label="Interview data drawer"
-          >
-            <div className="flex items-center justify-between gap-2 border-b border-border px-4 py-3 md:hidden">
-              <Typography.CaptionMedium className="text-foreground">
-                Interview data
-              </Typography.CaptionMedium>
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                onClick={() => setIsDrawerOpen(false)}
-                className="text-muted-foreground"
-              >
-                Close
-              </Button>
-            </div>
-            <div className="space-y-4 p-4">
-              {renderSuggestions()}
-
-              {error ? (
-                <Typography.SubCaption className="block text-destructive">
-                  {error}
-                </Typography.SubCaption>
-              ) : null}
-
-              <div className="space-y-2 rounded-md border bg-muted/40 p-3 text-sm">
-                <Typography.CaptionMedium className="block">
-                  Interview data
-                </Typography.CaptionMedium>
-                {summary ? (
-                  <>
-                    <div className="flex flex-wrap items-center justify-between gap-2 text-[11px]">
-                      <div className="flex flex-wrap gap-2">
-                        {renderFieldChip("Role", positionDone)}
-                        {renderFieldChip("Seniority", seniorityDone)}
-                        {renderFieldChip("Company", companyDone)}
-                        {renderFieldChip("Duration", durationDone)}
-                        {renderFieldChip("Stack", stackDone)}
-                      </div>
-                    </div>
-                    {positionDone ||
-                    seniorityDone ||
-                    companyDone ||
-                    durationDone ||
-                    stackDone ||
-                    modeDone ||
-                    notesDone ? (
-                      <>
-                        <dl className="mt-2 space-y-2 text-xs">
-                          {positionDone ? (
-                            <div className="flex items-start justify-between gap-3">
-                              <dt className="text-muted-foreground">Role</dt>
-                              <dd className="text-right">{summary.position}</dd>
-                            </div>
-                          ) : null}
-                          {seniorityDone ? (
-                            <div className="flex items-start justify-between gap-3">
-                              <dt className="text-muted-foreground">
-                                Seniority
-                              </dt>
-                              <dd className="text-right">
-                                {summary.seniority}
-                              </dd>
-                            </div>
-                          ) : null}
-                          {companyDone ? (
-                            <div className="flex items-start justify-between gap-3">
-                              <dt className="text-muted-foreground">Company</dt>
-                              <dd className="text-right">
-                                {summary.companyProfile}
-                              </dd>
-                            </div>
-                          ) : null}
-                          {durationDone ? (
-                            <div className="flex items-start justify-between gap-3">
-                              <dt className="text-muted-foreground">
-                                Duration
-                              </dt>
-                              <dd className="text-right">{summary.duration}</dd>
-                            </div>
-                          ) : null}
-                          {stackDone ? (
-                            <div className="flex items-start justify-between gap-3">
-                              <dt className="text-muted-foreground">Stack</dt>
-                              <dd className="text-right">{summary.stack}</dd>
-                            </div>
-                          ) : null}
-                          {modeDone ? (
-                            <div className="flex items-start justify-between gap-3">
-                              <dt className="text-muted-foreground">Mode</dt>
-                              <dd className="text-right">{summary.mode}</dd>
-                            </div>
-                          ) : null}
-                        </dl>
-                        {notesDone ? (
-                          <div className="mt-2 space-y-1">
-                            <Typography.Caption className="block text-muted-foreground">
-                              Notes
-                            </Typography.Caption>
-                            <Typography.SubCaption className="block whitespace-pre-line text-foreground">
-                              {summary.notes}
-                            </Typography.SubCaption>
-                          </div>
-                        ) : null}
-                      </>
-                    ) : (
-                      <Typography.SubCaption className="mt-2 block text-muted-foreground">
-                        Keep chatting to extract the key interview parameters.
-                      </Typography.SubCaption>
-                    )}
-                  </>
-                ) : (
-                  <Typography.SubCaption className="block text-muted-foreground">
-                    Keep chatting to extract the key interview parameters.
-                  </Typography.SubCaption>
-                )}
-                <div className="mt-3 flex items-center justify-between gap-2 text-[11px]">
-                  <Button
-                    type="button"
-                    size="sm"
-                    className="h-7 px-2 text-[11px]"
-                    disabled={!canSummarize}
-                    onClick={async () => {
-                      if (!canSummarize) {
-                        return;
-                      }
-
-                      const next = await updateSummary(messages);
-
-                      if (!next || !onSummary) {
-                        return;
-                      }
-                      onSummary(next);
-                    }}
-                  >
-                    Summarize
-                  </Button>
-                  <span className="text-[10px] text-muted-foreground">
-                    {canSummarize ? "Ready" : `${capturedCount}/5 captured`}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </aside>
         </section>
       );
     }

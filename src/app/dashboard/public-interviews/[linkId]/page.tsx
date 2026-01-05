@@ -254,7 +254,7 @@ export default async function PublicInterviewLinkDetailPage({
             </div>
           </div>
 
-          <div className="grid gap-6 lg:grid-cols-[minmax(0,1.2fr)_420px]">
+          <div className="space-y-6">
             <section className="space-y-3">
               <div>
                 <Typography.SubCaption className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
@@ -298,12 +298,12 @@ export default async function PublicInterviewLinkDetailPage({
               )}
             </section>
 
-            <aside className="rounded-3xl border border-border/60 bg-background/80 p-4 shadow-xl shadow-primary/5 backdrop-blur">
+            <section className="rounded-3xl border border-border/60 bg-background/80 p-4 shadow-xl shadow-primary/5 backdrop-blur">
               <PublicInterviewQuestionsPanel
                 linkId={link.id}
                 initialQuestions={readQuestions(link.plan)}
               />
-            </aside>
+            </section>
           </div>
         </CardContent>
       </Card>

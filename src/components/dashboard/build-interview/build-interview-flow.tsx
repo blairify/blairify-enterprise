@@ -1,12 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 import type { AiPositionSummary } from "@/app/dashboard/build-interview/actions";
 import { generateTestInterviewQuestionPlan } from "@/app/dashboard/build-interview/test-interview-actions";
 import { getInterviewerForRole } from "@/lib/config/interviewers";
 import type { PlannedQuestion } from "@/lib/test-interview/test-interview-types";
-import { BuildInterviewAiChat } from "./build-interview-ai-chat";
+import {
+  BuildInterviewAiChat,
+  type QuickPickField,
+  type QuickPickSelections,
+} from "./build-interview-ai-chat";
+import { QuestionsList } from "./questions-list";
 import { TestInterviewPlanPanel } from "./test-interview-plan-panel";
 
 export type InterviewPersonalization = "personalized" | "general";
@@ -21,6 +26,54 @@ export function BuildInterviewFlow() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [isReviewed, setIsReviewed] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [quickPickSelections, setQuickPickSelections] =
+    useState<QuickPickSelections>({
+      position: null,
+      seniority: null,
+      duration: null,
+    });
+  const [isSending, setIsSending] = useState(false);
+  const [isSummarizing, setIsSummarizing] = useState(false);
+  const sendMessageRef = useRef<((content: string) => Promise<void>) | null>(
+    null,
+  );
+
+  async function handleQuickPickSelect(
+    field: QuickPickField,
+    value: string,
+    label: string,
+  ) {
+    if (isSending || isSummarizing) return;
+
+    setQuickPickSelections((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+
+    let content = "";
+    switch (field) {
+      case "position": {
+        content = `Let's target the ${label} position.`;
+        break;
+      }
+      case "seniority": {
+        content = `The seniority level should be ${label}.`;
+        break;
+      }
+      case "duration": {
+        content = `Make the interview last ${label}.`;
+        break;
+      }
+      default: {
+        const _never: never = field;
+        throw new Error(`Unhandled field: ${_never}`);
+      }
+    }
+
+    if (content && sendMessageRef.current) {
+      await sendMessageRef.current(content);
+    }
+  }
 
   const gridClassName = summary
     ? "grid gap-6 lg:grid-cols-[1fr_420px]"
@@ -65,20 +118,44 @@ export function BuildInterviewFlow() {
     <div className="bg-background flex items-stretch justify-center">
       <div className="w-full max-w-6xl">
         <div className={gridClassName}>
-          <BuildInterviewAiChat onSummary={(value) => setSummary(value)} />
+          <BuildInterviewAiChat
+            onSummary={(value) => setSummary(value)}
+            quickPickSelections={quickPickSelections}
+            onQuickPickSelectionsChange={setQuickPickSelections}
+            isSending={isSending}
+            onIsSendingChange={setIsSending}
+            isSummarizing={isSummarizing}
+            onIsSummarizingChange={setIsSummarizing}
+            onSendMessageRef={sendMessageRef}
+          />
           {summary ? (
             <TestInterviewPlanPanel
               summary={summary}
-              questions={questions}
               isGenerating={isGenerating}
               error={error}
-              isReviewed={isReviewed}
-              onReviewedChange={setIsReviewed}
+              canStart={Boolean(
+                questions && questions.length > 0 && isReviewed,
+              )}
               onGenerate={handleGenerate}
-              onStart={handleStart}
+              quickPickSelections={quickPickSelections}
+              onQuickPickSelect={handleQuickPickSelect}
+              isSending={isSending}
+              isSummarizing={isSummarizing}
             />
           ) : null}
         </div>
+
+        {summary && questions && questions.length > 0 ? (
+          <div className="mt-6">
+            <QuestionsList
+              summary={summary}
+              questions={questions}
+              isReviewed={isReviewed}
+              onReviewedChange={setIsReviewed}
+              onStart={handleStart}
+            />
+          </div>
+        ) : null}
       </div>
     </div>
   );

@@ -97,6 +97,7 @@ function mapPracticeToPlanned(question: Question): PlannedQuestion {
     id: question.id,
     source: "practice",
     title: question.title,
+    description: question.description,
     prompt: question.prompt,
     meta: {
       topic: question.topic,

@@ -1,18 +1,24 @@
 "use client";
 
 import Link from "next/link";
-import { useActionState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import {
   type CreatePublicInterviewLinkFormState,
   createPublicInterviewLinkAction,
 } from "@/app/dashboard/public-interviews/actions";
 import { Typography } from "@/components/common/atoms/typography";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 interface CreatePublicInterviewLinkFormProps {
   plan: unknown;
+  onLinkGenerated?: () => void;
+  onStart?: () => void;
+  canStart?: boolean;
+  isReviewed?: boolean;
+  onReviewedChange?: (value: boolean) => void;
 }
 
 const initialState: CreatePublicInterviewLinkFormState = {
@@ -32,6 +38,11 @@ function firstError(
 
 export function CreatePublicInterviewLinkForm({
   plan,
+  onLinkGenerated,
+  onStart,
+  canStart = false,
+  isReviewed = false,
+  onReviewedChange,
 }: CreatePublicInterviewLinkFormProps) {
   const [state, formAction, isPending] = useActionState(
     createPublicInterviewLinkAction,
@@ -39,33 +50,86 @@ export function CreatePublicInterviewLinkForm({
   );
 
   const titleError = firstError(state, "title");
+  const isGenerated = state.status === "success" && !!state.publicUrl;
+  const [titleValue, setTitleValue] = useState("");
+  const isTitleEmpty = titleValue.trim() === "";
+
+  useEffect(() => {
+    if (isGenerated && onLinkGenerated) {
+      onLinkGenerated();
+    }
+  }, [isGenerated, onLinkGenerated]);
 
   return (
-    <form action={formAction} className="space-y-3">
+    <form
+      action={formAction}
+      className="rounded-lg border border-border/50 bg-muted/10 p-4"
+    >
       <input type="hidden" name="plan" value={JSON.stringify(plan)} />
-      <div className="space-y-2">
-        <Label htmlFor="public-link-title">Public link title</Label>
-        <Input
-          id="public-link-title"
-          name="title"
-          aria-invalid={!!titleError}
-          aria-describedby={titleError ? "public-link-title-error" : undefined}
-          placeholder="e.g. Frontend Engineer Interview"
-        />
-        {titleError ? (
-          <Typography.Body
-            id="public-link-title-error"
-            className="text-sm text-destructive"
-          >
-            {titleError}
-          </Typography.Body>
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
+        <div className="flex-1 space-y-4">
+          <Label htmlFor="public-link-title">Public link title</Label>
+          <Input
+            id="public-link-title"
+            name="title"
+            value={titleValue}
+            onChange={(e) => setTitleValue(e.target.value)}
+            aria-invalid={!!titleError}
+            aria-describedby={
+              titleError ? "public-link-title-error" : undefined
+            }
+            placeholder="e.g. Frontend Engineer Interview for Bayer"
+          />
+          {titleError ? (
+            <Typography.Body
+              id="public-link-title-error"
+              className="text-sm text-destructive"
+            >
+              {titleError}
+            </Typography.Body>
+          ) : null}
+        </div>
+        {onReviewedChange ? (
+          <div className="flex items-center gap-2">
+            <Checkbox
+              id="test-interview-reviewed"
+              checked={isReviewed}
+              onCheckedChange={(value) => {
+                if (value === true) {
+                  onReviewedChange(true);
+                  return;
+                }
+                if (value === false) {
+                  onReviewedChange(false);
+                  return;
+                }
+              }}
+            />
+            <label
+              htmlFor="test-interview-reviewed"
+              className="text-sm font-medium leading-5"
+            >
+              I reviewed all questions
+            </label>
+          </div>
         ) : null}
-      </div>
-
-      <div className="flex items-center justify-end">
-        <Button type="submit" disabled={isPending} className="w-full sm:w-auto">
+        <Button
+          type="submit"
+          size="sm"
+          disabled={isPending || isTitleEmpty || !isReviewed}
+        >
           {isPending ? "Creating..." : "Generate public link"}
         </Button>
+        {onStart ? (
+          <Button
+            type="button"
+            size="sm"
+            onClick={onStart}
+            disabled={!canStart || !isGenerated}
+          >
+            Start test interview
+          </Button>
+        ) : null}
       </div>
 
       {state.message ? (
@@ -79,33 +143,35 @@ export function CreatePublicInterviewLinkForm({
           {state.message}
         </Typography.Body>
       ) : null}
-
-      {state.status === "success" && state.publicUrl ? (
-        <div className="rounded-md border bg-muted/20 px-3 py-2 text-sm">
-          <div className="flex items-center justify-between gap-2">
-            <span className="text-muted-foreground">Public URL</span>
-            <Link
-              href={state.publicUrl}
-              className="font-medium underline underline-offset-4"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Open
-            </Link>
-          </div>
-          <Typography.SubCaption className="mt-1 block break-all text-muted-foreground">
-            {state.publicUrl}
-          </Typography.SubCaption>
-
-          {state.linkId ? (
-            <div className="mt-3 flex justify-end">
-              <Button asChild variant="secondary" className="w-full sm:w-auto">
-                <Link href={`/dashboard/public-interviews/${state.linkId}`}>
-                  View details
-                </Link>
-              </Button>
+      {isGenerated ? (
+        <div className="mt-3 rounded-lg border border-emerald-500/50 bg-emerald-500/10 p-4">
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex-1">
+              <Typography.Body className="text-sm font-medium text-emerald-600 dark:text-emerald-400">
+                Public link generated
+              </Typography.Body>
+              <Typography.SubCaption className="mt-1 block break-all text-muted-foreground">
+                {state.publicUrl}
+              </Typography.SubCaption>
             </div>
-          ) : null}
+            <div className="flex items-center gap-2">
+              <Link
+                href={state.publicUrl ?? ""}
+                className="text-sm font-medium text-emerald-600 underline underline-offset-4 dark:text-emerald-400"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Open
+              </Link>
+              {state.linkId ? (
+                <Button asChild variant="outline" size="sm">
+                  <Link href={`/dashboard/public-interviews/${state.linkId}`}>
+                    View details
+                  </Link>
+                </Button>
+              ) : null}
+            </div>
+          </div>
         </div>
       ) : null}
     </form>

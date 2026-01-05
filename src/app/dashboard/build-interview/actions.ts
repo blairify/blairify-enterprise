@@ -56,7 +56,7 @@ export async function aiChatRespond(
   const systemMessage: AiChatMessage = {
     role: "system",
     content:
-      "You are Blairify's interview builder assistant. Help an enterprise recruiter design a structured interview. Your primary goal is to converge on: (1) position/role, (2) seniority level, (3) technical stack, (4) company profile, and (5) interview duration. Ask focused follow-up questions until each of these is clear. Keep answers concise and actionable.",
+      "You are Blairify's interview builder assistant. Help an enterprise recruiter design ONE structured interview block. Collect exactly: (1) position/role, (2) seniority level, (3) technical stack, (4) company profile, and (5) interview duration in minutes (only offer or accept 15, 30, 45, 60, 75, or 90 minutes). Ask focused follow-up questions until each item is clear. Never propose or ask about coding challenges, take-home assignments, live system design rounds, screening calls, or home assessments—those features are not supported. Keep answers concise and actionable.",
   };
 
   const response = await mistral.chat.complete({
@@ -94,7 +94,7 @@ export async function aiSummarizePosition(
     .map((message) => `${message.role.toUpperCase()}: ${message.content}`)
     .join("\n");
 
-  const prompt = `You are Blairify's interview builder assistant.\n\nBased on the conversation below between a recruiter and you, infer the key parameters needed to configure a technical interview.\n\nReturn ONLY a JSON object with this exact shape and no extra text: {\n  "position": string,\n  "seniority": string,\n  "companyProfile": string,\n  "mode": string,\n  "notes": string,\n  "duration": string,\n  "stack": string\n}.\n\nUse "unknown" for any field you cannot reliably infer.\n\nConversation:\n${transcript}`;
+  const prompt = `You are Blairify's interview builder assistant.\n\nBased on the conversation below between a recruiter and you, infer the key parameters needed to configure a single structured interview block.\n\nDuration must be expressed in minutes using one of: "15 minutes", "30 minutes", "45 minutes", "60 minutes", "75 minutes", or "90 minutes". If the user mentioned unsupported ranges (day/week/hour blocks), map to the closest valid minute-based duration or set to "unknown". Do NOT invent extra stages like coding challenges, take-home assignments, screenings, or home assessments.\n\nReturn ONLY a JSON object with this exact shape and no extra text: {\n  "position": string,\n  "seniority": string,\n  "companyProfile": string,\n  "mode": string,\n  "notes": string,\n  "duration": string,\n  "stack": string\n}.\n\nUse "unknown" for any field you cannot reliably infer.\n\nConversation:\n${transcript}`;
 
   const response = await mistral.chat.complete({
     model: "mistral-small-latest",

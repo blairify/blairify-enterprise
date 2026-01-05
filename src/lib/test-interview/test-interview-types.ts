@@ -9,6 +9,7 @@ export interface PlannedQuestion {
   source: PlannedQuestionSource;
   prompt: string;
   title?: string;
+  description?: string;
   meta?: {
     topic?: string;
     difficulty?: string;

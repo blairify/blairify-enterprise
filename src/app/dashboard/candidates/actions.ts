@@ -66,17 +66,25 @@ export async function createCandidateAction(
     throw error;
   }
 
+  const normalizeOptional = (value: FormDataEntryValue | null) => {
+    if (typeof value !== "string") {
+      return undefined;
+    }
+    const trimmed = value.trim();
+    return trimmed.length > 0 ? trimmed : undefined;
+  };
+
   const rawValues = {
     fullName: formData.get("fullName"),
-    email: formData.get("email"),
-    headline: formData.get("headline"),
-    location: formData.get("location"),
-    seniority: formData.get("seniority"),
-    currentCompany: formData.get("currentCompany"),
-    linkedInUrl: formData.get("linkedInUrl"),
-    githubUrl: formData.get("githubUrl"),
-    cvUrl: formData.get("cvUrl"),
-    notes: formData.get("notes"),
+    email: normalizeOptional(formData.get("email")),
+    headline: normalizeOptional(formData.get("headline")),
+    location: normalizeOptional(formData.get("location")),
+    seniority: normalizeOptional(formData.get("seniority")),
+    currentCompany: normalizeOptional(formData.get("currentCompany")),
+    linkedInUrl: normalizeOptional(formData.get("linkedInUrl")),
+    githubUrl: normalizeOptional(formData.get("githubUrl")),
+    cvUrl: normalizeOptional(formData.get("cvUrl")),
+    notes: normalizeOptional(formData.get("notes")),
   };
 
   const parsed = createCandidateSchema.safeParse(rawValues);
